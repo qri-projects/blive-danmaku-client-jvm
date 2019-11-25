@@ -4,12 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.ggemo.bilidanmakuclient.copyCS.DanmakuLoader;
 import com.ggemo.bilidanmakuclient.copyCS.util.BitConverter;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+@Slf4j
 public class MakePacket {
     private static final short PROTOCOL_VERSION = 1, magic = 16;
     private static final int PARAM = 1;
@@ -19,39 +21,32 @@ public class MakePacket {
     private static final byte[] VERSION_BYTES = BitConverter.toBe(BitConverter.getBytes(PROTOCOL_VERSION)), PARAM_BYTES = BitConverter.toBe(BitConverter.getBytes(PARAM)), MAGIC_BYTES = BitConverter.toBe(BitConverter.getBytes(magic));
 
     @Getter
-    private static byte[] HEARTBEAT_PACKET;
+    private static final byte[] HEARTBEAT_PACKET = makePacket(OperationEnum.HEARTBEAT, PLAYLOAD_BYTES);
 
-    static {
-        try {
-            HEARTBEAT_PACKET = makePacket(OperationEnum.HEARTBEAT, PLAYLOAD_BYTES);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
-    public static byte[] makePacket(OperationEnum operation) throws IOException {
+    public static byte[] makePacket(OperationEnum operation) {
         return makePacket(operation, MAGIC_BYTES, VERSION_BYTES, PARAM_BYTES, PLAYLOAD_BYTES);
     }
 
-    public static byte[] makePacket(OperationEnum operation, Object object) throws IOException {
+    public static byte[] makePacket(OperationEnum operation, Object object) {
         return makePacket(operation, JSON.toJSONString(object));
     }
 
-    public static byte[] makePacket(OperationEnum operation, String body) throws IOException {
+    public static byte[] makePacket(OperationEnum operation, String body) {
         byte[] playload = body.getBytes(StandardCharsets.UTF_8);
         return makePacket(operation, playload);
     }
 
-    public static byte[] makePacket(OperationEnum operation, byte[] playload) throws IOException {
+    public static byte[] makePacket(OperationEnum operation, byte[] playload) {
         return makePacket(operation, MAGIC_BYTES, VERSION_BYTES, PARAM_BYTES, playload);
     }
 
-    public static byte[] makePacket(OperationEnum operation, short magic, short version, int param, String body) throws IOException {
+    public static byte[] makePacket(OperationEnum operation, short magic, short version, int param, String body) {
         byte[] playload = body.getBytes(StandardCharsets.UTF_8);
         return makePacket(operation, BitConverter.toBe(BitConverter.getBytes(magic)), BitConverter.toBe(BitConverter.getBytes(version)), BitConverter.toBe(BitConverter.getBytes(param)), playload);
     }
 
-    public static byte[] makePacket(OperationEnum operation, byte[] magic, byte[] version,  byte[] param, byte[] playload) throws IOException {
+    public static byte[] makePacket(OperationEnum operation, byte[] magic, byte[] version,  byte[] param, byte[] playload) {
         int playloadLen = playload.length;
         int packetLen = playloadLen + 16;
 
@@ -70,6 +65,10 @@ public class MakePacket {
                 ms.write(playload, 0, playloadLen);
             }
             return ms.toByteArray();
+        } catch (IOException e) {
+            // 这里信任不会发生IOException
+            log.error("construct ByteArrayOutputStream failed: " + e);
+            return null;
         }
     }
 

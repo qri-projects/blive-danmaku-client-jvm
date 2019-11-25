@@ -76,7 +76,7 @@ public class BiliDanmakuClient {
         this.hostServerToken = data.getToken();
     }
 
-    private boolean initRoom() throws IOException, BiliClientException {
+    private boolean initRoom() throws IOException, BiliClientException, BiliDanmakuClientException {
         RoomInitResponse roomInitResponse;
         try {
             roomInitResponse = roomInitRequest.request(tmpRoomId);
@@ -88,11 +88,7 @@ public class BiliDanmakuClient {
         RoomInitResponseData roomInitResponseData;
         try {
             roomInitResponseData = roomInitResponse.getData();
-            if (roomInitResponseData == null) {
-                return false;
-            } else {
-                this.parseRoomInit(roomInitResponseData);
-            }
+            this.parseRoomInit(roomInitResponseData);
         } catch (BiliClientException e) {
             String exceptionMsg = "roomInitResponse.getData BiliException";
             log.error(exceptionMsg + e);
@@ -110,11 +106,7 @@ public class BiliDanmakuClient {
         DanmakuServerConfResponseData danmakuServerConfResponseData;
         try {
             danmakuServerConfResponseData = danmakuServerConfResponse.getData();
-            if (danmakuServerConfResponseData == null) {
-                return false;
-            }else{
-                this.parseServerConf(danmakuServerConfResponseData);
-            }
+            this.parseServerConf(danmakuServerConfResponseData);
         } catch (BiliClientException e) {
             String exceptionMsg = "danmakuServerConfResponse.getData BiliException";
             log.error(exceptionMsg + e);
@@ -123,15 +115,17 @@ public class BiliDanmakuClient {
 
         this.parseServerConf(danmakuServerConfResponseData);
         if (this.hostServerList == null || this.hostServerList.isEmpty()) {
-            return false;
+            throw new BiliDanmakuClientException("初始化error, hostServerList为null");
         }
         return true;
     }
 
     private void messageLoop() throws BiliDanmakuClientException {
         if (hostServerToken == null) {
-            boolean initRes = this.initRoom();
-            if (!initRes) {
+            boolean initRes = false;
+            try {
+                initRes = this.initRoom();
+            } catch (IOException | BiliClientException e) {
                 throw new BiliDanmakuClientException("初始化error");
             }
         }
@@ -145,12 +139,7 @@ public class BiliDanmakuClient {
                 this.ws = ws;
                 ws.connect();
                 retryCount = 0;
-
-                try {
-                    sendAuth(hostServerToken);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                sendAuth(hostServerToken);
                 CompletableFuture.supplyAsync(() -> {
                     heartBeatLoop();
                     return null;
@@ -167,13 +156,8 @@ public class BiliDanmakuClient {
     private void heartBeatLoop() {
         while (true) {
             CompletableFuture.supplyAsync(() -> {
-                try {
-                    BiliDanmakuClient.this.heartBeat();
-                    return true;
-                } catch (IOException e) {
-                    log.error("heartbeat error: " + e.toString());
-                    return false;
-                }
+                BiliDanmakuClient.this.heartBeat();
+                return true;
             });
             try {
                 Thread.sleep(heartBeatInterval);
@@ -183,13 +167,13 @@ public class BiliDanmakuClient {
         }
     }
 
-    private void sendAuth(String token) throws IOException {
+    private void sendAuth(String token) {
         SendAuthDO sendAuthData = new SendAuthDO(this.uId, this.roomId, token);
 
         this.ws.send(MakePacket.makePacket(OperationEnum.AUTH, sendAuthData));
     }
 
-    private void heartBeat() throws IOException {
+    private void heartBeat() {
         ws.send(MakePacket.getHEARTBEAT_PACKET());
     }
 

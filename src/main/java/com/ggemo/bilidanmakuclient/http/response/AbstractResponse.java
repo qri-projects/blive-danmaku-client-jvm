@@ -27,7 +27,10 @@ public class AbstractResponse<T extends ResponseData> implements Response {
 
     public T getData() throws BiliClientException {
         if (this.code != 0) {
-            throw new BiliClientException();
+            throw new BiliClientException("code != 0");
+        }
+        if (data == null) {
+            throw new BiliClientException("data is null");
         }
         return data;
     }
