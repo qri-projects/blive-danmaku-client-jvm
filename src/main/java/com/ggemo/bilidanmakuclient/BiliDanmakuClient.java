@@ -76,13 +76,14 @@ public class BiliDanmakuClient {
         this.hostServerToken = data.getToken();
     }
 
-    private boolean initRoom() {
+    private boolean initRoom() throws IOException, BiliClientException {
         RoomInitResponse roomInitResponse;
         try {
             roomInitResponse = roomInitRequest.request(tmpRoomId);
         } catch (IOException e) {
-            e.printStackTrace();
-            return false;
+            String exceptionMsg = "roomInit IOException";
+            log.error(exceptionMsg + e);
+            throw new IOException(exceptionMsg);
         }
         RoomInitResponseData roomInitResponseData;
         try {
@@ -93,16 +94,18 @@ public class BiliDanmakuClient {
                 this.parseRoomInit(roomInitResponseData);
             }
         } catch (BiliClientException e) {
-            e.printStackTrace();
-            return false;
+            String exceptionMsg = "roomInitResponse.getData BiliException";
+            log.error(exceptionMsg + e);
+            throw new BiliClientException(exceptionMsg);
         }
 
         DanmakuServerConfResponse danmakuServerConfResponse;
         try {
             danmakuServerConfResponse = danmakuServerConfRequest.request(tmpRoomId);
         } catch (IOException e) {
-            e.printStackTrace();
-            return false;
+            String exceptionMsg = "danmakuServerConf IOException";
+            log.error(exceptionMsg + e);
+            throw new IOException(exceptionMsg);
         }
         DanmakuServerConfResponseData danmakuServerConfResponseData;
         try {
@@ -113,8 +116,9 @@ public class BiliDanmakuClient {
                 this.parseServerConf(danmakuServerConfResponseData);
             }
         } catch (BiliClientException e) {
-            e.printStackTrace();
-            return false;
+            String exceptionMsg = "danmakuServerConfResponse.getData BiliException";
+            log.error(exceptionMsg + e);
+            throw new BiliClientException(exceptionMsg);
         }
 
         this.parseServerConf(danmakuServerConfResponseData);
