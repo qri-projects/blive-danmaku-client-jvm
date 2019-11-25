@@ -1,7 +1,9 @@
-package com.ggemo.bilidynamicclient.response;
+package com.ggemo.bilidanmakuclient.http.response;
 
-import com.ggemo.bilidynamicclient.exception.BiliClientException;
-import lombok.*;
+import com.ggemo.bilidanmakuclient.http.exception.BiliClientException;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Setter
 @NoArgsConstructor
@@ -11,7 +13,7 @@ public class AbstractResponse<T extends ResponseData> implements Response {
     String message;
     T data;
 
-    public static Response parse(String json) throws BiliClientException {
+    public static Response parse(String json) {
         throw new UnsupportedOperationException();
     }
 

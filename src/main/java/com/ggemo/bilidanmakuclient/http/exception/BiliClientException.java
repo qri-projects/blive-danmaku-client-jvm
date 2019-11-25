@@ -1,4 +1,4 @@
-package com.ggemo.bilidynamicclient.exception;
+package com.ggemo.bilidanmakuclient.http.exception;
 
 public class BiliClientException extends Exception {
     public BiliClientException() {

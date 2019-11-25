@@ -1,4 +1,4 @@
-package com.ggemo.bilidynamicclient.response;
+package com.ggemo.bilidanmakuclient.http.response;
 
 public interface ResponseData {
 }
