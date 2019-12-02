@@ -1,8 +1,5 @@
-package com.ggemo.bilidanmakuclient.improveter;
+package com.ggemo.bilidanmakuclient;
 
-import com.ggemo.bilidanmakuclient.improveter.Client;
-import com.ggemo.bilidanmakuclient.improveter.handler.HandlerHolder;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayInputStream;
@@ -11,6 +8,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
+
+import com.ggemo.bilidanmakuclient.handler.HandlerHolder;
 
 @Slf4j
 public class HandleDataLoop {

@@ -1,6 +1,5 @@
 package com.ggemo.bilidanmakuclient;
 
-import com.ggemo.bilidanmakuclient.copyCS.util.BitConverter;
 import lombok.Getter;
 
 @Getter
@@ -30,10 +29,8 @@ public enum OperationEnum {
     MaxBusinessOp(10000),
     ;
     int value;
-    byte[] byteValue;
 
     OperationEnum(int i) {
         this.value = i;
-        this.byteValue = BitConverter.toBe(BitConverter.getBytes(i));
     }
 }

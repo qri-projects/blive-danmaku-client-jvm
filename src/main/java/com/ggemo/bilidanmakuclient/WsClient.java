@@ -1,8 +1,6 @@
-package com.ggemo.bilidanmakuclient.improveter;
+package com.ggemo.bilidanmakuclient;
 
 import com.alibaba.fastjson.JSON;
-import com.ggemo.bilidanmakuclient.OperationEnum;
-import com.ggemo.bilidanmakuclient.copyCS.util.BitConverter;
 import com.ggemo.bilidanmakuclient.structs.SendAuthDO;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

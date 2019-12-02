@@ -1,19 +1,22 @@
-package com.ggemo.bilidanmakuclient.improveter.handler;
+package com.ggemo.bilidanmakuclient.handler;
 
 import java.util.HashSet;
 import java.util.Set;
 
+
 public class HandlerHolder {
-    Set<UserCountHandler> userCountHandlerSet;
-    Set<CmdHandler> cmdHandlerSet;
+    private Set<UserCountHandler> userCountHandlerSet;
+    private Set<CmdHandler> cmdHandlerSet;
 
     public HandlerHolder() {
         userCountHandlerSet = new HashSet<>();
         cmdHandlerSet = new HashSet<>();
     }
-    public boolean addUserCountHandler(UserCountHandler handler){
-        return userCountHandlerSet.add(handler);
+
+    public void addUserCountHandler(UserCountHandler o) {
+        userCountHandlerSet.add(o);
     }
+
     public boolean removeUserCountHandler(UserCountHandler handler){
         return userCountHandlerSet.remove(handler);
     }
@@ -36,4 +39,6 @@ public class HandlerHolder {
             cmdHandler.handle(cmdJson);
         }
     }
+
+
 }

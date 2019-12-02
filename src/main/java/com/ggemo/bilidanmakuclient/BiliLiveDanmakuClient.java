@@ -1,29 +1,25 @@
-package com.ggemo.bilidanmakuclient.improveter;
+package com.ggemo.bilidanmakuclient;
 
-        import com.ggemo.bilidanmakuclient.OperationEnum;
-        import com.ggemo.bilidanmakuclient.exception.BiliDanmakuClientException;
-        import com.ggemo.bilidanmakuclient.http.exception.BiliClientException;
-        import com.ggemo.bilidanmakuclient.http.request.DanmakuServerConfRequest;
-        import com.ggemo.bilidanmakuclient.http.request.RoomInitRequest;
-        import com.ggemo.bilidanmakuclient.http.response.impl.DanmakuServerConfResponse;
-        import com.ggemo.bilidanmakuclient.http.response.impl.RoomInitResponse;
-        import com.ggemo.bilidanmakuclient.http.response.responsedataa.DanmakuServerConfResponseData;
-        import com.ggemo.bilidanmakuclient.http.response.responsedataa.RoomInitResponseData;
-        import com.ggemo.bilidanmakuclient.improveter.handler.HandlerHolder;
-        import com.ggemo.bilidanmakuclient.improveter.handler.UserCountHandler;
-        import com.ggemo.bilidanmakuclient.structs.SendAuthDO;
-        import lombok.extern.slf4j.Slf4j;
-        import org.jetbrains.annotations.NotNull;
+import com.ggemo.bilidanmakuclient.exception.BiliDanmakuClientException;
+import com.ggemo.bilidanmakuclient.handler.HandlerHolder;
+import com.ggemo.bilidanmakuclient.http.exception.BiliClientException;
+import com.ggemo.bilidanmakuclient.http.request.DanmakuServerConfRequest;
+import com.ggemo.bilidanmakuclient.http.request.RoomInitRequest;
+import com.ggemo.bilidanmakuclient.http.response.impl.DanmakuServerConfResponse;
+import com.ggemo.bilidanmakuclient.http.response.impl.RoomInitResponse;
+import com.ggemo.bilidanmakuclient.http.response.responsedataa.DanmakuServerConfResponseData;
+import com.ggemo.bilidanmakuclient.http.response.responsedataa.RoomInitResponseData;
+import lombok.extern.slf4j.Slf4j;
 
-        import java.io.IOException;
-        import java.net.InetSocketAddress;
-        import java.net.Socket;
-        import java.util.List;
-        import java.util.Random;
-        import java.util.concurrent.*;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.*;
 
 @Slf4j
-public class Client {
+public class BiliLiveDanmakuClient {
     private long tmpRoomId, uId, roomId;
 
     private List<DanmakuServerConfResponseData.HostServerInfo> hostServerList;
@@ -41,7 +37,7 @@ public class Client {
 
     private HandlerHolder handlerHolder;
 
-    public Client(long roomId, long uId, HandlerHolder handlerHolder) {
+    public BiliLiveDanmakuClient(long roomId, long uId, HandlerHolder handlerHolder) {
         this.tmpRoomId = roomId;
         this.uId = uId;
         this.handlerHolder = handlerHolder;
@@ -59,15 +55,15 @@ public class Client {
         });
     }
 
-    public Client(long roomId, long uId){
+    public BiliLiveDanmakuClient(long roomId, long uId) {
         this(roomId, uId, new HandlerHolder());
     }
 
-    public Client(long roomId) {
+    public BiliLiveDanmakuClient(long roomId) {
         this(roomId, (long) (1e14 + 2e14 * RANDOM.nextDouble()));
     }
 
-    public Client(long roomId, HandlerHolder handlerHolder) {
+    public BiliLiveDanmakuClient(long roomId, HandlerHolder handlerHolder) {
         this(roomId, (long) (1e14 + 2e14 * RANDOM.nextDouble()), handlerHolder);
     }
 
@@ -130,7 +126,7 @@ public class Client {
                 if (wsClient.sendAuth(this.uId, this.roomId, hostServerToken)) {
                     heartbeatTask = heartbeatThreadPool.scheduleAtFixedRate(wsClient::sendHeartBeat, 2, HEARTBEAT_INTERVAL, TimeUnit.SECONDS);
                     return socket;
-                }else{
+                } else {
                     cleanHeartBeatTask();
                     try {
                         socket.close();
@@ -164,7 +160,7 @@ public class Client {
         }
     }
 
-    public void start(int nThread){
+    public void start(int nThread) {
         var pool = Executors.newFixedThreadPool(nThread, r -> {
             Thread t = new Thread(r);
             t.setName("运行线程");
@@ -183,7 +179,7 @@ public class Client {
         HandlerHolder handlerHolder = new HandlerHolder();
         handlerHolder.addUserCountHandler(x -> System.out.println("当前人气: " + x));
         handlerHolder.addCmdHandler(System.out::println);
-        Client client = new Client(21132965L, handlerHolder);
+        BiliLiveDanmakuClient client = new BiliLiveDanmakuClient(21132965L, handlerHolder);
         client.start(3);
     }
 }
