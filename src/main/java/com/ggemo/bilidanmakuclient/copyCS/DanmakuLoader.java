@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.ggemo.bilidanmakuclient.copyCS.util.BitConverter;
+import com.ggemo.bilidanmakuclient.structs.SendAuthDO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -57,6 +58,8 @@ public abstract class DanmakuLoader {
     private int roomId;
     private List<HostServer> hostServerList;
 
+    private String token;
+
     public DanmakuLoader(int roomId) throws IOException {
         initHttpClient(roomId);
         initParam();
@@ -88,9 +91,12 @@ public abstract class DanmakuLoader {
             JSONObject data = JSON.parseObject(resStr).getJSONObject("data");
             hostServerList = data.getObject("host_server_list", new TypeReference<List<HostServer>>() {
             });
-            chatHost = hostServerList.get(0).host;
+            chatHost = hostServerList.get(2).host;
 //            chatHost = "wss://" + hostServerList.get(0).host;
-            chatPort = hostServerList.get(0).wsPort;
+            chatPort = hostServerList.get(2).wsPort;
+            chatHost = data.getString("host");
+            chatPort = data.getInteger("port");
+            token = data.getString("token");
             if (chatHost.isEmpty() || chatHost.isBlank() || chatPort == null) {
 //                throw new Exception("");
             }
@@ -163,6 +169,8 @@ public abstract class DanmakuLoader {
 
             System.out.println("typeId: " + typeId);
             byte[] bb = Arrays.copyOf(buffer, playloadLen);
+            System.out.print("bytes");
+            System.out.println(Arrays.toString(bb));
             String json = new String(bb, StandardCharsets.UTF_8);
             System.out.println("String: \"" + json + "\"");
 
@@ -204,7 +212,7 @@ public abstract class DanmakuLoader {
 
     private boolean sendJoinChannel(int channelId) {
         long tmpUid = (long) (1e14 + 2e14 * RANDOM.nextDouble());
-        String playload = "{\"roomid\":" + channelId + " , \"uid\":" + tmpUid + " }";
+        String playload = JSON.toJSONString(new SendAuthDO(channelId, tmpUid, token));
         try {
             makePacket(makePacket(7, playload));
             return true;
@@ -292,20 +300,20 @@ public abstract class DanmakuLoader {
     }
 
     public static void main(String[] args) throws IOException {
-        System.out.println(1);
-        ByteArrayOutputStream s = DanmakuLoader.makePacket(7, "{\"roomid\":" + "13" + " , \"uid\":" + "123" + " }");
-        System.out.println(Arrays.toString(s.toByteArray()));
+//        System.out.println(1);
+//        ByteArrayOutputStream s = DanmakuLoader.makePacket(7, "{\"roomid\":" + "13" + " , \"uid\":" + "123" + " }");
+//        System.out.println(Arrays.toString(s.toByteArray()));
 
-//        new DanmakuLoader(493) {
-//            @Override
-//            public void handleReceiveRoomCount(int userCount) throws Exception {
-//                System.out.println("观众人数" + userCount);
-//            }
-//
-//            @Override
-//            public void handleReceiveDanku() {
-//
-//            }
-//        }.connect();
+        new DanmakuLoader(21452505) {
+            @Override
+            public void handleReceiveRoomCount(int userCount) throws Exception {
+                System.out.println("观众人数" + userCount);
+            }
+
+            @Override
+            public void handleReceiveDanku() {
+
+            }
+        }.connect();
     }
 }

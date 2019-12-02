@@ -11,7 +11,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 
 public class DanmakuServerConfRequest implements Request {
-    private static final String DANMAKU_SERVER_CONF_URL_TEMPLATE = "https://api.live.bilibili.com/room/v1/Danmu/getConf?id=%d";
+    private static final String DANMAKU_SERVER_CONF_URL_TEMPLATE = "https://api.live.bilibili.com/room/v1/Danmu/getConf?id=%d&platform=pc&player=web";
 
     private MyHttpClient httpClient;
 

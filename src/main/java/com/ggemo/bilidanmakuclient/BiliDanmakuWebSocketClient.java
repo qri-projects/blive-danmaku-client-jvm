@@ -29,6 +29,7 @@ public class BiliDanmakuWebSocketClient extends WebSocketClient {
 
     @Override
     public void onError(Exception e) {
+        System.out.println(e);
         e.printStackTrace();
     }
 

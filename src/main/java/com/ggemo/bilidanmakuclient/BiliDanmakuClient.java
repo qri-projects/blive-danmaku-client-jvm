@@ -11,6 +11,7 @@ import com.ggemo.bilidanmakuclient.http.response.responsedataa.DanmakuServerConf
 import com.ggemo.bilidanmakuclient.http.response.responsedataa.RoomInitResponseData;
 import com.ggemo.bilidanmakuclient.structs.SendAuthDO;
 import lombok.extern.slf4j.Slf4j;
+import org.java_websocket.WebSocket;
 import struct.JavaStruct;
 
 import java.io.IOException;
@@ -76,74 +77,66 @@ public class BiliDanmakuClient {
         this.hostServerToken = data.getToken();
     }
 
-    private boolean initRoom() throws IOException, BiliClientException, BiliDanmakuClientException {
+    private void initRoom() throws IOException, BiliClientException, BiliDanmakuClientException {
         RoomInitResponse roomInitResponse;
-        try {
-            roomInitResponse = roomInitRequest.request(tmpRoomId);
-        } catch (IOException e) {
-            String exceptionMsg = "roomInit IOException";
-            log.error(exceptionMsg + e);
-            throw new IOException(exceptionMsg);
-        }
+        roomInitResponse = roomInitRequest.request(tmpRoomId);
         RoomInitResponseData roomInitResponseData;
-        try {
-            roomInitResponseData = roomInitResponse.getData();
-            this.parseRoomInit(roomInitResponseData);
-        } catch (BiliClientException e) {
-            String exceptionMsg = "roomInitResponse.getData BiliException";
-            log.error(exceptionMsg + e);
-            throw new BiliClientException(exceptionMsg);
-        }
+        roomInitResponseData = roomInitResponse.getData();
+        this.parseRoomInit(roomInitResponseData);
 
         DanmakuServerConfResponse danmakuServerConfResponse;
-        try {
-            danmakuServerConfResponse = danmakuServerConfRequest.request(tmpRoomId);
-        } catch (IOException e) {
-            String exceptionMsg = "danmakuServerConf IOException";
-            log.error(exceptionMsg + e);
-            throw new IOException(exceptionMsg);
-        }
+        danmakuServerConfResponse = danmakuServerConfRequest.request(tmpRoomId);
         DanmakuServerConfResponseData danmakuServerConfResponseData;
-        try {
-            danmakuServerConfResponseData = danmakuServerConfResponse.getData();
-            this.parseServerConf(danmakuServerConfResponseData);
-        } catch (BiliClientException e) {
-            String exceptionMsg = "danmakuServerConfResponse.getData BiliException";
-            log.error(exceptionMsg + e);
-            throw new BiliClientException(exceptionMsg);
-        }
+        danmakuServerConfResponseData = danmakuServerConfResponse.getData();
+        this.parseServerConf(danmakuServerConfResponseData);
 
         this.parseServerConf(danmakuServerConfResponseData);
         if (this.hostServerList == null || this.hostServerList.isEmpty()) {
             throw new BiliDanmakuClientException("初始化error, hostServerList为null");
         }
-        return true;
     }
 
     private void messageLoop() throws BiliDanmakuClientException {
         if (hostServerToken == null) {
-            boolean initRes = false;
             try {
-                initRes = this.initRoom();
+                this.initRoom();
             } catch (IOException | BiliClientException e) {
-                throw new BiliDanmakuClientException("初始化error");
+                throw new BiliDanmakuClientException("初始化error, " + e.getMessage());
             }
         }
 
-        int retryCount = 0;
+        int retryCount = hostServerList.size() - 1;
         while (true) {
+            System.out.println("retry" + retryCount);
             DanmakuServerConfResponseData.HostServerInfo hostServer = this.hostServerList.get(retryCount % this.hostServerList.size());
             BiliDanmakuWebSocketClient ws = null;
             try {
-                ws = new BiliDanmakuWebSocketClient(String.format("ws://%s:%d/sub", hostServer.getHost(), hostServer.getWsPort()));
+                ws = BiliDanmakuWebSocketClient.init(hostServer.getHost(), this.ssl ? hostServer.getWssPort() : hostServer.getWsPort(), this.ssl);
+//                ws = BiliDanmakuWebSocketClient.init(hostServer.getHost(), hostServer.getPort(), false);
                 this.ws = ws;
-                ws.connect();
-                retryCount = 0;
-                sendAuth(hostServerToken);
-                CompletableFuture.supplyAsync(() -> {
-                    heartBeatLoop();
-                    return null;
-                }, heartBeatLoopExecutor);
+                try {
+                    ws.connectBlocking();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+//                while (!ws.getReadyState().equals(WebSocket.READYSTATE.OPEN)) {
+                for (int i = 0; i <= 7; i++) {
+                    if (ws.getReadyState().equals(WebSocket.READYSTATE.OPEN)) {
+                        sendAuth(hostServerToken);
+//                        CompletableFuture.supplyAsync(() -> {
+                        heartBeatLoop();
+//                            return null;
+//                        }, heartBeatLoopExecutor);
+                    }
+                    System.out.println(ws.getReadyState());
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                retryCount += 1;
+
 
             } finally {
                 if (ws != null) {
@@ -155,14 +148,15 @@ public class BiliDanmakuClient {
 
     private void heartBeatLoop() {
         while (true) {
+            System.out.println(ws.getReadyState());
             CompletableFuture.supplyAsync(() -> {
                 BiliDanmakuClient.this.heartBeat();
-                return true;
+                return null;
             });
             try {
                 Thread.sleep(heartBeatInterval);
             } catch (InterruptedException e) {
-                log.error("heartbeat loop sleep error: " + e.toString());
+                log.error("heartbeat loop sleep error: " + e);
             }
         }
     }
@@ -179,6 +173,7 @@ public class BiliDanmakuClient {
 
 
     public static void main(String[] args) throws BiliDanmakuClientException {
-        new BiliDanmakuClient(66688L, 13578650, 30000, true, false).messageLoop();
+//        new BiliDanmakuClient(21452505L, 13578650, 30000, true, false).messageLoop();
+
     }
 }
