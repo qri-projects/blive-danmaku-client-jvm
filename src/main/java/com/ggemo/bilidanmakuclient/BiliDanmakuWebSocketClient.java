@@ -32,5 +32,14 @@ public class BiliDanmakuWebSocketClient extends WebSocketClient {
         e.printStackTrace();
     }
 
+    public static BiliDanmakuWebSocketClient init(String host, int port, boolean ssl){
+        String uri;
+        if(ssl){
+            uri = String.format("wss://%s:%d/sub", host, port);
+        }else{
+            uri = String.format("ws://%s:%d/sub", host, port);
+        }
+        return new BiliDanmakuWebSocketClient(uri);
+    }
 
 }
