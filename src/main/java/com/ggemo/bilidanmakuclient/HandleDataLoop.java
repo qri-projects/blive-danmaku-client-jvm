@@ -16,8 +16,6 @@ public class HandleDataLoop {
     private Socket socket;
     private long roomId;
 
-    private DataInputStream input = null;
-
     private HandlerHolder handlerHolder;
 
     public HandleDataLoop(Socket socket, long roomId, HandlerHolder handlerHolder) {
@@ -38,7 +36,7 @@ public class HandleDataLoop {
             byte[] ret = new byte[bufferSize];
 //            try {
             while (true) {
-                input = new DataInputStream(socket.getInputStream());
+                DataInputStream input = new DataInputStream(socket.getInputStream());
                 int retLength = input.read(ret);
                 if (retLength > 0) {
                     byte[] recvData = new byte[retLength];
@@ -46,13 +44,6 @@ public class HandleDataLoop {
                     analyzeData(recvData);
                 }
             }
-//            } catch (Exception e) {
-//                log.info("自动重连" + " 真实直播间ID：" + roomId);
-//                client.cleanHeartBeatTask();
-//                new Thread(client::start).start();
-//                e.printStackTrace();
-//            }
-//                DMJ_UiT_Text.setCaretPosition(DMJ_UiT_Text.getText().length());
         }
     }
 
@@ -68,9 +59,12 @@ public class HandleDataLoop {
                 if (msgLength < 16) {
                     log.info("可能需要扩大缓冲区大小");
                 } else if (msgLength > 16 && msgLength == dataLength) {
+
                     // 其实是两个char
                     inputStream.readInt();
+
                     int action = inputStream.readInt() - 1;
+
                     // 直播间在线用户数目
                     if (action == 2) {
                         inputStream.readInt();
@@ -83,8 +77,6 @@ public class HandleDataLoop {
                         if (inputStream.read(msgBody) == msgBodyLength) {
                             String jsonStr = new String(msgBody, StandardCharsets.UTF_8);
                             handlerHolder.handleCmd(jsonStr);
-//                            System.out.println(jsonStr);
-                            log.info(jsonStr);
                         }
                     }
                 } else if (msgLength > 16 && msgLength < dataLength) {
@@ -96,8 +88,8 @@ public class HandleDataLoop {
                     System.arraycopy(data, msgLength, remainDate, 0, remainLen);
                     analyzeData(remainDate);
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            } catch (Exception e) {
+                log.error(e.toString());
             }
         }
     }

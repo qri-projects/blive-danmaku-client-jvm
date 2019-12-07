@@ -2,7 +2,6 @@ package com.ggemo.bilidanmakuclient;
 
 import com.alibaba.fastjson.JSON;
 import com.ggemo.bilidanmakuclient.structs.SendAuthDO;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.DataOutputStream;

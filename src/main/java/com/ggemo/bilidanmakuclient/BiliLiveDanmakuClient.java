@@ -160,14 +160,24 @@ public class BiliLiveDanmakuClient {
         }
     }
 
-    public void start(int nThread) {
-        var pool = Executors.newFixedThreadPool(nThread, r -> {
+    public void start(int nThreads) {
+        var pool = Executors.newFixedThreadPool(nThreads, r -> {
             Thread t = new Thread(r);
             t.setName("运行线程");
             return t;
         });
-        for (int i = 0; i < nThread; i++) {
+        for (int i = 0; i < nThreads; i++) {
             pool.execute(this::start);
+        }
+    }
+
+    public void startSync(int nThreads){
+        CountDownLatch latch = new CountDownLatch(1);
+        start(nThreads);
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -176,10 +186,6 @@ public class BiliLiveDanmakuClient {
     }
 
     public static void main(String[] args) throws BiliDanmakuClientException {
-        HandlerHolder handlerHolder = new HandlerHolder();
-        handlerHolder.addUserCountHandler(x -> System.out.println("当前人气: " + x));
-        handlerHolder.addCmdHandler(System.out::println);
-        BiliLiveDanmakuClient client = new BiliLiveDanmakuClient(21132965L, handlerHolder);
-        client.start(3);
+
     }
 }

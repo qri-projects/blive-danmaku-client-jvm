@@ -13,6 +13,16 @@ public class HandlerHolder {
         cmdHandlerSet = new HashSet<>();
     }
 
+    public HandlerHolder(CmdHandler cmdHandler){
+        this();
+        this.addCmdHandler(cmdHandler);
+    }
+
+    public HandlerHolder(UserCountHandler userCountHandler, CmdHandler cmdHandler){
+        this(cmdHandler);
+        this.addUserCountHandler(userCountHandler);
+    };
+
     public void addUserCountHandler(UserCountHandler o) {
         userCountHandlerSet.add(o);
     }
