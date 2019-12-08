@@ -89,6 +89,7 @@ public class HandleDataLoop {
                     analyzeData(remainDate);
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 log.error(e.toString());
             }
         }

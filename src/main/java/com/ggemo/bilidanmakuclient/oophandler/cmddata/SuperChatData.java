@@ -1,10 +1,10 @@
-package com.ggemo.bilidanmakustructs.cmddata;
+package com.ggemo.bilidanmakuclient.oophandler.cmddata;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
-import com.ggemo.bilidanmakustructs.CmdData;
-import com.ggemo.bilidanmakustructs.util.StringUtil;
+import com.ggemo.bilidanmakuclient.oophandler.CmdData;
+import com.ggemo.bilidanmakuclient.oophandler.util.StringUtil;
 import lombok.*;
 
 @ToString
@@ -144,7 +144,8 @@ public class SuperChatData implements CmdData {
     /**
      * 单位应该是秒
      */
-    int time;
+    @JSONField(name = "time")
+    int lastTime;
 
     @JSONField(name = "start_time")
     long startTime;
@@ -173,5 +174,9 @@ public class SuperChatData implements CmdData {
         userInfo.setUserFaceImgUrl(StringUtil.removeTransSlash(userInfo.getUserFaceImgUrl()));
         userInfo.setUserFaceFrameImgUrl(StringUtil.removeTransSlash(userInfo.getUserFaceFrameImgUrl()));
         return superCharData;
+    }
+
+    public String toJSONString(){
+        return JSON.toJSONString(this);
     }
 }

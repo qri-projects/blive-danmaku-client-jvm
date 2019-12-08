@@ -12,6 +12,6 @@ public class BiliLiveDanmakuClientTest {
         handlerHolder.addUserCountHandler(x -> System.out.println("userCount: " + x));
         handlerHolder.addCmdHandler(System.out::println);
         BiliLiveDanmakuClient client = new BiliLiveDanmakuClient(4767523L, handlerHolder);
-        client.startSync(3);
+        client.start();
     }
 }

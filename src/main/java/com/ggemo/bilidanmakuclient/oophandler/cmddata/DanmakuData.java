@@ -1,8 +1,10 @@
-package com.ggemo.bilidanmakustructs.cmddata;
+package com.ggemo.bilidanmakuclient.oophandler.cmddata;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.ggemo.bilidanmakustructs.CmdData;
+import com.ggemo.bilidanmakuclient.oophandler.CmdData;
 import lombok.*;
+import org.testcontainers.shaded.org.apache.commons.lang.StringUtils;
 
 @Getter
 @Setter
@@ -16,7 +18,7 @@ public class DanmakuData implements CmdData {
         int param0;
         int mode;
         int fontSize;
-        long color;
+        String color;
         long time;
         long random;
         int param1;
@@ -25,7 +27,7 @@ public class DanmakuData implements CmdData {
         int messageType;
         int bubble;
 
-        public Info(int param0, int mode, int fontSize, long color, long time, long random, int param1, String uidCrc, int param2, int messageType, int bubble) {
+        public Info(int param0, int mode, int fontSize, String color, long time, long random, int param1, String uidCrc, int param2, int messageType, int bubble) {
             this.param0 = param0;
             this.mode = mode;
             this.fontSize = fontSize;
@@ -40,7 +42,7 @@ public class DanmakuData implements CmdData {
         }
 
         public Info(JSONArray o) {
-            this(o.getInteger(0), o.getInteger(1), o.getInteger(2), o.getLong(3), o.getLong(4), o.getLong(5), o.getInteger(6), o.getString(7), o.getInteger(8), o.getInteger(9), o.getInteger(10));
+            this(o.getInteger(0), o.getInteger(1), o.getInteger(2), parseColor(o.getLong(3)), o.getLong(4), o.getLong(5), o.getInteger(6), o.getString(7), o.getInteger(8), o.getInteger(9), o.getInteger(10));
         }
     }
 
@@ -77,11 +79,11 @@ public class DanmakuData implements CmdData {
         String medalName;
         String userName;
         long roomId;
-        long medalColor;
+        String medalColor;
         String specialMedalName;
         boolean specialMedalOrnot;
 
-        public UserMedal(int medalLevel, String medalName, String userName, long roomId, long medalColor, String specialMedalName, boolean specialMedalOrnot) {
+        public UserMedal(int medalLevel, String medalName, String userName, long roomId, String medalColor, String specialMedalName, boolean specialMedalOrnot) {
             this.medalLevel = medalLevel;
             this.medalName = medalName;
             this.userName = userName;
@@ -92,7 +94,7 @@ public class DanmakuData implements CmdData {
         }
 
         public UserMedal(JSONArray o) {
-            this(o.getInteger(0), o.getString(1), o.getString(2), o.getLong(3), o.getLong(4), o.getString(5), o.getBoolean(6));
+            this(o.getInteger(0), o.getString(1), o.getString(2), o.getLong(3), parseColor(o.getLong(4)), o.getString(5), o.getBoolean(6));
         }
     }
 
@@ -100,10 +102,10 @@ public class DanmakuData implements CmdData {
     public static class UserLevel {
         int userLevel;
         int param0;
-        long userLevelColor;
+        String userLevelColor;
         String userLevelRank;
 
-        public UserLevel(int userLevel, int param0, long userLevelColor, String userLevelRank) {
+        public UserLevel(int userLevel, int param0, String userLevelColor, String userLevelRank) {
             this.userLevel = userLevel;
             this.param0 = param0;
             this.userLevelColor = userLevelColor;
@@ -111,7 +113,7 @@ public class DanmakuData implements CmdData {
         }
 
         public UserLevel(JSONArray o) {
-            this(o.getInteger(0), o.getInteger(1), o.getLong(2), o.getString(3));
+            this(o.getInteger(0), o.getInteger(1), parseColor(o.getLong(2)), o.getString(3));
         }
     }
 
@@ -179,5 +181,19 @@ public class DanmakuData implements CmdData {
 
     public static DanmakuData fromJson(JSONArray o){
         return new DanmakuData(o);
+    }
+
+    public String toJSONString(){
+        return JSON.toJSONString(this);
+    }
+
+    public static String parseColor(long i){
+        String s = Long.toHexString(i);
+        int len = s.length();
+        if(len < 6){
+            s = StringUtils.repeat("0", 6 - len) + s;
+        }
+        s = "#" + s;
+        return s;
     }
 }

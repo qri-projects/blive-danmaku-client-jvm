@@ -1,10 +1,10 @@
-package com.ggemo.bilidanmakustructs.cmddata;
+package com.ggemo.bilidanmakuclient.oophandler.cmddata;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
-import com.ggemo.bilidanmakustructs.CmdData;
-import com.ggemo.bilidanmakustructs.util.StringUtil;
+import com.ggemo.bilidanmakuclient.oophandler.CmdData;
+import com.ggemo.bilidanmakuclient.oophandler.util.StringUtil;
 import lombok.*;
 
 import java.util.List;
@@ -105,7 +105,7 @@ public class SendGiftData implements CmdData {
     List topList;
 
     @JSONField(name = "timestamp")
-    long timestamp;
+    long time;
 
     int giftId;
 
@@ -213,6 +213,10 @@ public class SendGiftData implements CmdData {
         var sendGiftData = jsonObject.toJavaObject(SendGiftData.class);
         sendGiftData.setUserFaceImgUrl(StringUtil.removeTransSlash(sendGiftData.getUserFaceImgUrl()));
         return sendGiftData;
+    }
+
+    public String toJSONString(){
+        return JSON.toJSONString(this);
     }
 
     public static void main(String[] args) {

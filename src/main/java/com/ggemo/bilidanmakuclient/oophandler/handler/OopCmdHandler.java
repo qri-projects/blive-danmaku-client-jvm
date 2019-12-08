@@ -1,13 +1,13 @@
-package com.ggemo.bilidanmakustructs.handler;
+package com.ggemo.bilidanmakuclient.oophandler.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ggemo.bilidanmakuclient.handler.CmdHandler;
-import com.ggemo.bilidanmakustructs.CmdEnum;
-import com.ggemo.bilidanmakustructs.cmddata.DanmakuData;
-import com.ggemo.bilidanmakustructs.cmddata.GuardBuyData;
-import com.ggemo.bilidanmakustructs.cmddata.SendGiftData;
-import com.ggemo.bilidanmakustructs.cmddata.SuperChatData;
+import com.ggemo.bilidanmakuclient.oophandler.CmdEnum;
+import com.ggemo.bilidanmakuclient.oophandler.cmddata.DanmakuData;
+import com.ggemo.bilidanmakuclient.oophandler.cmddata.GuardBuyData;
+import com.ggemo.bilidanmakuclient.oophandler.cmddata.SendGiftData;
+import com.ggemo.bilidanmakuclient.oophandler.cmddata.SuperChatData;
 
 import java.util.HashSet;
 import java.util.Set;

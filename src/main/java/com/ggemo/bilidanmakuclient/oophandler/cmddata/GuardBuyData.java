@@ -1,9 +1,9 @@
-package com.ggemo.bilidanmakustructs.cmddata;
+package com.ggemo.bilidanmakuclient.oophandler.cmddata;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
-import com.ggemo.bilidanmakustructs.CmdData;
+import com.ggemo.bilidanmakuclient.oophandler.CmdData;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,10 +42,15 @@ public class GuardBuyData implements CmdData {
     @JSONField(name = "end_time")
     long endTime;
 
-    public static GuardBuyData fromJson(String json){
+    public static GuardBuyData fromJson(String json) {
         return JSON.parseObject(json, GuardBuyData.class);
     }
-    public static GuardBuyData fromJson(JSONObject json){
+
+    public static GuardBuyData fromJson(JSONObject json) {
         return json.toJavaObject(GuardBuyData.class);
+    }
+
+    public String toJSONString() {
+        return JSON.toJSONString(this);
     }
 }

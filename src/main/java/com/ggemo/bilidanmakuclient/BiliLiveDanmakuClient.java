@@ -111,7 +111,6 @@ public class BiliLiveDanmakuClient {
 
         // for循环用来从后往前选择hostServer
         for (int i = 0; i < this.hostServerList.size(); i++) {
-            System.out.println("connect");
             int hostServerNo = this.hostServerList.size() - 1 - i;
 
             DanmakuServerConfResponseData.HostServerInfo hostServer = this.hostServerList.get(hostServerNo);
@@ -136,15 +135,14 @@ public class BiliLiveDanmakuClient {
             } catch (IOException e) {
                 log.error(e.toString());
                 cleanHeartBeatTask();
-                try {
-                    socket.close();
-                } catch (IOException ignored) {
-                }
             }
         }
         return socket;
     }
 
+    /**
+     * sync
+     */
     public void start() {
         while (true) {
             Socket socket = connect();
@@ -155,31 +153,36 @@ public class BiliLiveDanmakuClient {
                 } catch (IOException e) {
                     log.error(e.toString());
                     cleanHeartBeatTask();
+                    try {
+                        socket.close();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
         }
     }
 
-    public void start(int nThreads) {
-        var pool = Executors.newFixedThreadPool(nThreads, r -> {
-            Thread t = new Thread(r);
-            t.setName("运行线程");
-            return t;
-        });
-        for (int i = 0; i < nThreads; i++) {
-            pool.execute(this::start);
-        }
-    }
-
-    public void startSync(int nThreads){
-        CountDownLatch latch = new CountDownLatch(1);
-        start(nThreads);
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void start(int nThreads) {
+//        var pool = Executors.newFixedThreadPool(nThreads, r -> {
+//            Thread t = new Thread(r);
+//            t.setName("运行线程");
+//            return t;
+//        });
+//        for (int i = 0; i < nThreads; i++) {
+//            pool.execute(this::start);
+//        }
+//    }
+//
+//    public void startSync(int nThreads){
+//        CountDownLatch latch = new CountDownLatch(1);
+//        start(nThreads);
+//        try {
+//            latch.await();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     boolean cleanHeartBeatTask() {
         return this.heartbeatTask.cancel(true);
