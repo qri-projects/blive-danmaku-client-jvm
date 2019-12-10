@@ -1,10 +1,10 @@
-package com.ggemo.bilidanmakuclient.oophandler.cmddata;
+package com.ggemo.bilidanmakuclient.oop.cmddata;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
-import com.ggemo.bilidanmakuclient.oophandler.CmdData;
-import com.ggemo.bilidanmakuclient.oophandler.util.StringUtil;
+import com.ggemo.bilidanmakuclient.oop.CmdData;
+import com.ggemo.bilidanmakuclient.oop.util.StringUtil;
 import lombok.*;
 
 import java.util.List;
@@ -202,26 +202,31 @@ public class SendGiftData implements CmdData {
     @JSONField(name = "is_first")
     boolean firstOrnot;
 
-    public static SendGiftData fromJson(String json) {
+    public static SendGiftData fromJSON(String json) {
         json = StringUtil.unicodeToString(json);
-        SendGiftData sendGiftData = JSON.parseObject(json, SendGiftData.class);
-        sendGiftData.setUserFaceImgUrl(StringUtil.removeTransSlash(sendGiftData.getUserFaceImgUrl()));
-        return sendGiftData;
+        return fromJSON(JSON.parseObject(json).getJSONObject("data"));
     }
 
-    public static SendGiftData fromJson(JSONObject jsonObject) {
+    public static SendGiftData fromJSON(JSONObject jsonObject) {
         var sendGiftData = jsonObject.toJavaObject(SendGiftData.class);
         sendGiftData.setUserFaceImgUrl(StringUtil.removeTransSlash(sendGiftData.getUserFaceImgUrl()));
+        sendGiftData.setTime(sendGiftData.getTime() * 1000);
         return sendGiftData;
     }
 
-    public String toJSONString(){
+    public String toJSONString() {
         return JSON.toJSONString(this);
     }
 
-    public static void main(String[] args) {
-        String str = "{\"cmd\":\"SEND_GIFT\",\"data\":{\"giftName\":\"\\u6253call\",\"num\":1,\"uname\":\"\\u6674\\u592912\\u5ea6\",\"face\":\"http:\\/\\/i2.hdslb.com\\/bfs\\/face\\/410da90a5fb14728a058f70acc618b7fecf894c9.jpg\",\"guard_level\":0,\"rcost\":19729847,\"uid\":60897589,\"top_list\":[],\"timestamp\":1575717640,\"giftId\":30437,\"giftType\":0,\"action\":\"\\u6295\\u5582\",\"super\":0,\"super_gift_num\":30,\"super_batch_gift_num\":30,\"batch_combo_id\":\"batch:gift:combo_id:60897589:282994:30437:1:1575717635.7649\",\"price\":100,\"rnd\":\"BCC36413-CCF9-4175-AB79-6C404A854EC6\",\"newMedal\":0,\"newTitle\":0,\"medal\":[],\"title\":\"\",\"beatId\":\"\",\"biz_source\":\"live\",\"metadata\":\"\",\"remain\":0,\"gold\":0,\"silver\":0,\"eventScore\":0,\"eventNum\":0,\"smalltv_msg\":[],\"specialGift\":null,\"notice_msg\":[],\"capsule\":null,\"addFollow\":0,\"effect_block\":0,\"coin_type\":\"gold\",\"total_coin\":100,\"effect\":0,\"broadcast_id\":0,\"draw\":0,\"crit_prob\":0,\"combo_send\":{\"uid\":60897589,\"uname\":\"\\u6674\\u592912\\u5ea6\",\"gift_num\":1,\"combo_num\":30,\"gift_id\":30437,\"gift_name\":\"\\u6253call\",\"action\":\"\\u6295\\u5582\",\"combo_id\":\"gift:combo_id:60897589:282994:30437:1575717635.764\",\"send_master\":{\"uid\":282994,\"uname\":\"\\u6ce0\\u9e22yousa\",\"room_id\":47377}},\"batch_combo_send\":{\"uid\":60897589,\"uname\":\"\\u6674\\u592912\\u5ea6\",\"gift_num\":1,\"batch_combo_num\":30,\"gift_id\":30437,\"gift_name\":\"\\u6253call\",\"action\":\"\\u6295\\u5582\",\"batch_combo_id\":\"batch:gift:combo_id:60897589:282994:30437:1:1575717635.7649\",\"send_master\":{\"uid\":282994,\"uname\":\"\\u6ce0\\u9e22yousa\",\"room_id\":47377}},\"tag_image\":\"\",\"send_master\":{\"uid\":282994,\"uname\":\"\\u6ce0\\u9e22yousa\",\"room_id\":47377},\"is_first\":false}}";
-        var data = SendGiftData.fromJson(JSON.parseObject(str).getJSONObject("data"));
-        System.out.println(data);
+    public static SendGiftData fromGgemoJSON(JSONObject json){
+        var res = json.toJavaObject(SendGiftData.class);
+        res.setTime(res.getTime() * 1000);
+        return res;
+}
+
+    public static SendGiftData fromGgemoJSON(String json){
+        var res = JSON.parseObject(json, SendGiftData.class);
+        res.setTime(res.getTime());
+        return res;
     }
 }

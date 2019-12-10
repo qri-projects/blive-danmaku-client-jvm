@@ -1,4 +1,4 @@
-package com.ggemo.bilidanmakuclient.oophandler.util;
+package com.ggemo.bilidanmakuclient.oop.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

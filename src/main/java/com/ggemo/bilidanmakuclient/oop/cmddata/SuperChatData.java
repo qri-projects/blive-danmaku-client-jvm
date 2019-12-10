@@ -1,10 +1,10 @@
-package com.ggemo.bilidanmakuclient.oophandler.cmddata;
+package com.ggemo.bilidanmakuclient.oop.cmddata;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
-import com.ggemo.bilidanmakuclient.oophandler.CmdData;
-import com.ggemo.bilidanmakuclient.oophandler.util.StringUtil;
+import com.ggemo.bilidanmakuclient.oop.CmdData;
+import com.ggemo.bilidanmakuclient.oop.util.StringUtil;
 import lombok.*;
 
 @ToString
@@ -84,7 +84,7 @@ public class SuperChatData implements CmdData {
         int num;
 
         @JSONField(name = "gift_id")
-        long giftId;
+        int giftId;
 
         @JSONField(name = "gift_name")
         long giftName;
@@ -155,9 +155,13 @@ public class SuperChatData implements CmdData {
 
     Gift gift;
 
-    public static SuperChatData fromJson(String json) {
+    public static SuperChatData fromJSON(String json) {
         json = StringUtil.unicodeToString(json);
-        SuperChatData superCharData = JSON.parseObject(json, SuperChatData.class);
+        return fromJSON(JSON.parseObject(json).getJSONObject("data"));
+    }
+
+    public static SuperChatData fromJSON(JSONObject jsonObject) {
+        SuperChatData superCharData = jsonObject.toJavaObject(SuperChatData.class);
 
         superCharData.setBackgroundImageUrl(StringUtil.removeTransSlash(superCharData.getBackgroundImageUrl()));
         UserInfo userInfo = superCharData.getUserInfo();
@@ -166,14 +170,12 @@ public class SuperChatData implements CmdData {
         return superCharData;
     }
 
-    public static SuperChatData fromJson(JSONObject jsonObject) {
-        SuperChatData superCharData = jsonObject.toJavaObject(SuperChatData.class);
+    public static SuperChatData fromGgemoJSON(JSONObject json){
+        return json.toJavaObject(SuperChatData.class);
+    }
 
-        superCharData.setBackgroundImageUrl(StringUtil.removeTransSlash(superCharData.getBackgroundImageUrl()));
-        UserInfo userInfo = superCharData.getUserInfo();
-        userInfo.setUserFaceImgUrl(StringUtil.removeTransSlash(userInfo.getUserFaceImgUrl()));
-        userInfo.setUserFaceFrameImgUrl(StringUtil.removeTransSlash(userInfo.getUserFaceFrameImgUrl()));
-        return superCharData;
+    public static SuperChatData fromGgemoJSON(String json){
+        return JSON.parseObject(json, SuperChatData.class);
     }
 
     public String toJSONString(){

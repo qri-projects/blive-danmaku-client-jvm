@@ -1,13 +1,13 @@
-package com.ggemo.bilidanmakuclient.oophandler.handler;
+package com.ggemo.bilidanmakuclient.oop.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ggemo.bilidanmakuclient.handler.CmdHandler;
-import com.ggemo.bilidanmakuclient.oophandler.CmdEnum;
-import com.ggemo.bilidanmakuclient.oophandler.cmddata.DanmakuData;
-import com.ggemo.bilidanmakuclient.oophandler.cmddata.GuardBuyData;
-import com.ggemo.bilidanmakuclient.oophandler.cmddata.SendGiftData;
-import com.ggemo.bilidanmakuclient.oophandler.cmddata.SuperChatData;
+import com.ggemo.bilidanmakuclient.oop.CmdEnum;
+import com.ggemo.bilidanmakuclient.oop.cmddata.DanmakuData;
+import com.ggemo.bilidanmakuclient.oop.cmddata.GuardBuyData;
+import com.ggemo.bilidanmakuclient.oop.cmddata.SendGiftData;
+import com.ggemo.bilidanmakuclient.oop.cmddata.SuperChatData;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -70,22 +70,22 @@ public class OopCmdHandler implements CmdHandler {
         JSONObject jsonObject = JSON.parseObject(str);
         String cmd = jsonObject.getString("cmd");
         if(CmdEnum.DANMU_MSG.equalsStr(cmd)){
-            DanmakuData danmakuData = DanmakuData.fromJson(jsonObject.getJSONArray("info"));
+            DanmakuData danmakuData = DanmakuData.fromJSON(jsonObject.getJSONArray("info"));
             for (DanmakuHandler handler : danmakuHandlers) {
                 handler.handle(danmakuData);
             }
         }else if(CmdEnum.GUARD_BUY.equalsStr(cmd)){
-            GuardBuyData guardBuyData = GuardBuyData.fromJson(jsonObject.getJSONObject("data"));
+            GuardBuyData guardBuyData = GuardBuyData.fromJSON(jsonObject.getJSONObject("data"));
             for (GuardBuyHandler handler : guardBuyHandlers) {
                 handler.handle(guardBuyData);
             }
         }else if(CmdEnum.SEND_GIFT.equalsStr(cmd)){
-            SendGiftData sendGiftData = SendGiftData.fromJson(jsonObject.getJSONObject("data"));
+            SendGiftData sendGiftData = SendGiftData.fromJSON(jsonObject.getJSONObject("data"));
             for (SendGiftHandler handler : sendGiftHandlers) {
                 handler.handle(sendGiftData);
             }
         }else if(CmdEnum.SUPER_CHAT_MESSAGE.equalsStr(cmd)){
-            SuperChatData superChatData = SuperChatData.fromJson(jsonObject.getJSONObject("data"));
+            SuperChatData superChatData = SuperChatData.fromJSON(jsonObject.getJSONObject("data"));
             for (SuperchatHandler handler : superchatHandlers) {
                 handler.handle(superChatData);
             }

@@ -1,8 +1,9 @@
-package com.ggemo.bilidanmakuclient.oophandler.cmddata;
+package com.ggemo.bilidanmakuclient.oop.cmddata;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.ggemo.bilidanmakuclient.oophandler.CmdData;
+import com.alibaba.fastjson.JSONObject;
+import com.ggemo.bilidanmakuclient.oop.CmdData;
 import lombok.*;
 import org.testcontainers.shaded.org.apache.commons.lang.StringUtils;
 
@@ -179,8 +180,20 @@ public class DanmakuData implements CmdData {
         this(new Info(o.getJSONArray(0)), o.getString(1), new UserInfo(o.getJSONArray(2)), new UserMedal(o.getJSONArray(3)), new UserLevel(o.getJSONArray(4)), new Title(o.getJSONArray(5)), o.getInteger(6), o.getInteger(7), o.getObject(8, Object.class), o.getObject(9, Object.class), o.getObject(10, Object.class), o.getObject(11, Object.class));
     }
 
-    public static DanmakuData fromJson(JSONArray o){
+    public static DanmakuData fromJSON(JSONArray o){
         return new DanmakuData(o);
+    }
+
+    public static DanmakuData fromJSON(String json){
+        return fromJSON(JSON.parseObject(json).getJSONArray("info"));
+    }
+
+    public static DanmakuData fromGgemoJSON(JSONObject json){
+        return json.toJavaObject(DanmakuData.class);
+    }
+
+    public static DanmakuData fromGgemoJSON(String json){
+        return JSON.parseObject(json, DanmakuData.class);
     }
 
     public String toJSONString(){
