@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.ggemo.bilidanmakuclient.oop.CmdData;
+import com.ggemo.bilidanmakuclient.oop.handler.SuperchatHandler;
 import com.ggemo.bilidanmakuclient.oop.util.StringUtil;
 import lombok.*;
 
@@ -87,7 +88,7 @@ public class SuperChatData implements CmdData {
         int giftId;
 
         @JSONField(name = "gift_name")
-        long giftName;
+        String giftName;
     }
 
     String id;
@@ -181,4 +182,10 @@ public class SuperChatData implements CmdData {
     public String toJSONString(){
         return JSON.toJSONString(this);
     }
+
+    public static void main(String[] args) {
+        String s = "{\"cmd\":\"SUPER_CHAT_MESSAGE\",\"data\":{\"id\":\"29708\",\"uid\":6646129,\"price\":100,\"rate\":1000,\"message\":\"\\u5965\\u65af\\u5154\\u592b\\u65af\\u57fa\\u751f\\u65e5\\u5feb\\u4e50\\uff01\\u6211\\u7231\\u6c99\\u6708\\u7231\\u7684\\u6b7b\\u53bb\\u6d3b\\u6765\\uff01\",\"message_jpn\":\"\",\"background_image\":\"https:\\/\\/i0.hdslb.com\\/bfs\\/live\\/1aee2d5e9e8f03eed462a7b4bbfd0a7128bbc8b1.png\",\"background_color\":\"#FFF1C5\",\"background_icon\":\"\",\"background_price_color\":\"#ECCF75\",\"background_bottom_color\":\"#E2B52B\",\"ts\":1576073940,\"token\":\"82F6C8CF\",\"medal_info\":{\"icon_id\":0,\"target_id\":744713,\"special\":\"\",\"anchor_uname\":\"\\u96e8\\u5bab\\u6c34\\u5e0cChannel\",\"anchor_roomid\":4767523,\"medal_level\":6,\"medal_name\":\"\\u65e0\\u53e3\\u5e0c\",\"medal_color\":\"#5896de\"},\"user_info\":{\"uname\":\"\\u4e09\\u6c34\\u5316\\u6e05\\u6c81\\u4e09\\u5fc3\",\"face\":\"http:\\/\\/i2.hdslb.com\\/bfs\\/face\\/ad7c756e299839180626aafa1a40dbe43c9bb3de.jpg\",\"face_frame\":\"http:\\/\\/i0.hdslb.com\\/bfs\\/live\\/78e8a800e97403f1137c0c1b5029648c390be390.png\",\"guard_level\":3,\"user_level\":44,\"level_color\":\"#ff86b2\",\"is_vip\":1,\"is_svip\":1,\"is_main_vip\":1,\"title\":\"title-174-1\",\"manager\":0},\"time\":299,\"start_time\":1576073939,\"end_time\":1576074239,\"gift\":{\"num\":1,\"gift_id\":12000,\"gift_name\":\"\\u9192\\u76ee\\u7559\\u8a00\"}}}";
+        System.out.println(SuperChatData.fromJSON(s));
+    }
+
 }
