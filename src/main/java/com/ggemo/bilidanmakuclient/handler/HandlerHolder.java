@@ -46,7 +46,7 @@ public class HandlerHolder {
             try {
                 userCountHandler.handle(userCount);
             }catch (Exception e){
-                log.error("error while handling userCount: " + userCount + ", handler: " + userCountHandler.getClass().getName());
+                log.error("error while handling userCount: " + userCount + ", handler: " + userCountHandler.getClass().getName() +"\n" + e);
             }
         }
     }
@@ -55,7 +55,7 @@ public class HandlerHolder {
             try {
                 cmdHandler.handle(cmdJson);
             }catch (Exception e){
-                log.error("error while handling cmd: " + cmdJson + ", handler: " + cmdHandler.getClass().getName());
+                log.error("error while handling cmd: " + cmdJson + ", handler: " + cmdHandler.getClass().getName() +"\n" + e);
             }
         }
     }
