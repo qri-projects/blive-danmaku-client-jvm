@@ -69,8 +69,21 @@ public class DanmakuData implements CmdData {
             this.userNameColor = userNameColor;
         }
 
+        public UserInfo() {
+        }
+
         public UserInfo(JSONArray o) {
-            this(o.getInteger(0), o.getString(1), o.getBoolean(2), o.getBoolean(3), o.getBoolean(4), o.getInteger(5), o.getBoolean(6), o.getString(7));
+            this();
+            if(o.size() == 8) {
+                this.setUserId(o.getLong(0));
+                this.setUserName(o.getString(1));
+                this.setAdminOrnot(o.getBoolean(2));
+                this.setVipOrnot(o.getBoolean(3));
+                this.setSvipOrnot(o.getBoolean(4));
+                this.setUrank(o.getInteger(5));
+                this.setMobileVertifiedOrnot(o.getBoolean(6));
+                this.setUserNameColor(o.getString(7));
+            }
         }
     }
 
@@ -94,8 +107,21 @@ public class DanmakuData implements CmdData {
             this.specialMedalOrnot = specialMedalOrnot;
         }
 
+        public UserMedal() {
+        }
+
         public UserMedal(JSONArray o) {
-            this(o.getInteger(0), o.getString(1), o.getString(2), o.getLong(3), parseColor(o.getLong(4)), o.getString(5), o.getBoolean(6));
+            this();
+            if(o.size() == 7) {
+                this.setMedalLevel(o.getInteger(0));
+                this.setMedalName(o.getString(1));
+                this.setUserName(o.getString(2));
+                this.setRoomId(o.getLong(3));
+                this.setMedalColor(parseColor(o.getLong(4)));
+                this.setSpecialMedalName(o.getString(5));
+                this.setSpecialMedalOrnot(o.getBoolean(6));
+            }
+//            this(o.getInteger(0), o.getString(1), o.getString(2), o.getLong(3), parseColor(o.getLong(4)), o.getString(5), o.getBoolean(6));
         }
     }
 
@@ -113,8 +139,17 @@ public class DanmakuData implements CmdData {
             this.userLevelRank = userLevelRank;
         }
 
+        public UserLevel() {
+        }
+
         public UserLevel(JSONArray o) {
-            this(o.getInteger(0), o.getInteger(1), parseColor(o.getLong(2)), o.getString(3));
+            this();
+            if(o.size() == 4){
+                this.setUserLevel(o.getInteger(0));
+                this.setParam0(o.getInteger(1));
+                this.setUserLevelColor(parseColor(o.getLong(2)));
+                this.setUserLevelRank(o.getString(3));
+            }
         }
     }
 
@@ -128,8 +163,15 @@ public class DanmakuData implements CmdData {
             this.newTitle = newTitle;
         }
 
+        public Title() {
+        }
+
         public Title(JSONArray o) {
-            this(o.getString(0), o.getString(1));
+            this();
+            if(o.size() == 2) {
+                this.setOldTitle(o.getString(0));
+                this.setNewTitle(o.getString(1));
+            }
         }
     }
 
@@ -208,5 +250,12 @@ public class DanmakuData implements CmdData {
         }
         s = "#" + s;
         return s;
+    }
+
+    public static void main(String[] args) {
+        String json = "{\"cmd\":\"SEND_GIFT\",\"data\":{\"giftName\":\"\\u8282\\u594f\\u98ce\\u66b4\",\"num\":1,\"uname\":\"\\u6708\\u4e4b\\u971c\",\"face\":\"http:\\/\\/i0.hdslb.com\\/bfs\\/face\\/cf86aa943af3b5a6e14bac814b3e031d072fb797.jpg\",\"guard_level\":3,\"rcost\":12745796,\"uid\":3274135,\"top_list\":[],\"timestamp\":1576070987,\"giftId\":39,\"giftType\":0,\"action\":\"\\u6295\\u5582\",\"super\":0,\"super_gift_num\":1,\"super_batch_gift_num\":1,\"batch_combo_id\":\"batch:gift:combo_id:3274135:128912828:39:1:1576070987.3551\",\"price\":100000,\"rnd\":\"1576070770\",\"newMedal\":0,\"newTitle\":0,\"medal\":[],\"title\":\"\",\"beatId\":\"u77658\",\"biz_source\":\"live\",\"metadata\":\"\\u6c99\\u6708\\u5929\\u4e0b\\u7b2c\\u4e00\\u53ef\\u7231\\uff01\",\"remain\":0,\"gold\":0,\"silver\":0,\"eventScore\":0,\"eventNum\":0,\"smalltv_msg\":[],\"specialGift\":{\"time\":90,\"id\":1745578377388},\"notice_msg\":[],\"capsule\":null,\"addFollow\":0,\"effect_block\":0,\"coin_type\":\"gold\",\"total_coin\":80000,\"effect\":0,\"broadcast_id\":0,\"draw\":2,\"crit_prob\":0,\"combo_send\":{\"uid\":3274135,\"uname\":\"\\u6708\\u4e4b\\u971c\",\"gift_num\":1,\"combo_num\":1,\"gift_id\":39,\"gift_name\":\"\\u8282\\u594f\\u98ce\\u66b4\",\"action\":\"\\u6295\\u5582\",\"combo_id\":\"gift:combo_id:3274135:128912828:39:1576070987.3543\",\"send_master\":null},\"batch_combo_send\":{\"uid\":3274135,\"uname\":\"\\u6708\\u4e4b\\u971c\",\"gift_num\":1,\"batch_combo_num\":1,\"gift_id\":39,\"gift_name\":\"\\u8282\\u594f\\u98ce\\u66b4\",\"action\":\"\\u6295\\u5582\",\"batch_combo_id\":\"batch:gift:combo_id:3274135:128912828:39:1:1576070987.3551\",\"send_master\":null},\"tag_image\":\"\",\"send_master\":null,\"is_first\":true}}";
+
+        var danmakuData = DanmakuData.fromJSON(json);
+        System.out.println(danmakuData);
     }
 }
