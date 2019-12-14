@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.*;
@@ -95,7 +96,7 @@ public class BiliLiveDanmakuClient {
         }
     }
 
-    private Socket connect() {
+    private Socket connect() throws IOException {
         if (hostServerToken == null) {
             while (true) {
                 try {
@@ -118,7 +119,7 @@ public class BiliLiveDanmakuClient {
             InetSocketAddress address = new InetSocketAddress(hostServer.getHost(), hostServer.getPort());
 
             socket = new Socket();
-            try {
+//            try {
                 socket.setReceiveBufferSize(RECEIVE_BUFFER_SIZE);
                 socket.connect(address);
                 wsClient = new WsClient(socket);
@@ -129,13 +130,13 @@ public class BiliLiveDanmakuClient {
                     cleanHeartBeatTask();
                     try {
                         socket.close();
-                    } catch (IOException ignored) {
-                    }
+                } catch (IOException ignored) {
                 }
-            } catch (IOException e) {
-                log.error(e.toString());
-                cleanHeartBeatTask();
-            }
+                }
+//            } catch (IOException e) {
+//                log.error(e.toString());
+//                cleanHeartBeatTask();
+//            }
         }
         return socket;
     }
@@ -145,7 +146,14 @@ public class BiliLiveDanmakuClient {
      */
     public void start() {
         while (true) {
-            Socket socket = connect();
+            Socket socket = null;
+            try {
+                socket = connect();
+            }catch (IOException e){
+                log.error(e.toString());
+                cleanHeartBeatTask();
+                continue;
+            }
             if (socket != null && !socket.isClosed()) {
                 HandleDataLoop hdp = new HandleDataLoop(socket, roomId, this.handlerHolder);
                 try {

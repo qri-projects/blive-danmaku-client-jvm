@@ -27,12 +27,9 @@ public class HandleDataLoop {
     public void start() throws IOException {
         if (socket != null) {
             int bufferSize = 10 * 1024;
-            try {
-                bufferSize = socket.getReceiveBufferSize();
-                log.info("连接成功" + "真实直播间ID：" + roomId);
-            } catch (SocketException e) {
-                log.error(e.toString());
-            }
+
+            bufferSize = socket.getReceiveBufferSize();
+            log.info("连接成功" + "真实直播间ID：" + roomId);
             byte[] ret = new byte[bufferSize];
 //            try {
             while (true) {
