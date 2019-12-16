@@ -6,16 +6,12 @@
 
     <groupId>com.ggemo</groupId>
     <artifactId>bili-danmaku-client</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
     <distributionManagement>
         <repository>
-            <id>rdc-releases</id>
-            <url>https://repo.rdc.aliyun.com/repository/79664-release-1FLEvJ/</url>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/HHHHhgqcdxhg/bili-danmaku-client</url>
         </repository>
-        <snapshotRepository>
-            <id>rdc-snapshots</id>
-            <url>https://repo.rdc.aliyun.com/repository/79664-snapshot-KrRQlk/</url>
-        </snapshotRepository>
     </distributionManagement>
     <dependencies>
         <dependency>
