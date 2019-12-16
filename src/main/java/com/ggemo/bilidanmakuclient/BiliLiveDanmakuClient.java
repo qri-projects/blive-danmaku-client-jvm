@@ -34,7 +34,9 @@ public class BiliLiveDanmakuClient {
 
     private static final Random RANDOM = new Random();
     private static final int RECEIVE_BUFFER_SIZE = 10 * 1024;
-    private static final int HEARTBEAT_INTERVAL = 20; // 单位: 秒
+
+    // 单位: 秒
+    private static final int HEARTBEAT_INTERVAL = 20;
 
     private HandlerHolder handlerHolder;
 
