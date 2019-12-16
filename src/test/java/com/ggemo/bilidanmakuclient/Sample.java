@@ -90,13 +90,13 @@ public class Sample {
     }
 
     @Test
-    void simplePrintTest() {
+    public void simplePrintTest() {
         long roomId = 4767523L;
         simplePrint(roomId);
     }
 
     @Test
-    void oopPrintPrint() {
+    public void oopPrintTest() {
         long roomId = 4767523L;
         oopPrint(roomId);
     }
