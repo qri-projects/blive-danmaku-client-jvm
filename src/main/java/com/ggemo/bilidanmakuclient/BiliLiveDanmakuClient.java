@@ -58,13 +58,13 @@ public class BiliLiveDanmakuClient {
         });
     }
 
-    public BiliLiveDanmakuClient(long roomId, long uId) {
-        this(roomId, uId, new HandlerHolder());
-    }
+//    public BiliLiveDanmakuClient(long roomId, long uId) {
+//        this(roomId, uId, new HandlerHolder());
+//    }
 
-    public BiliLiveDanmakuClient(long roomId) {
-        this(roomId, (long) (1e14 + 2e14 * RANDOM.nextDouble()));
-    }
+//    public BiliLiveDanmakuClient(long roomId) {
+//        this(roomId, (long) (1e14 + 2e14 * RANDOM.nextDouble()));
+//    }
 
     public BiliLiveDanmakuClient(long roomId, HandlerHolder handlerHolder) {
         this(roomId, (long) (1e14 + 2e14 * RANDOM.nextDouble()), handlerHolder);
