@@ -20,49 +20,48 @@ public class WsClient {
         this.socket = socket;
     }
 
-    public boolean sendSocketData(int totalLen, int headLen, int protocolVersion, OperationEnum operation, int param, byte[] data) {
-        if(socket.isClosed()){
-            return false;
+    public void sendSocketData(int totalLen, int headLen, int protocolVersion, OperationEnum operation, int param, byte[] data) throws IOException {
+        if (socket.isClosed()) {
+            throw new IOException("socket closed");
         }
-        try {
-            synchronized (socket) {
-                DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-                out.writeInt(totalLen);
-                out.writeShort(headLen);
-                out.writeShort(protocolVersion);
-                out.writeInt(operation.getValue());
-                out.writeInt(param);
-                if (data != null && data.length > 0) {
-                    out.write(data);
-                }
-                out.flush();
-                return true;
+//        try {
+        synchronized (socket) {
+            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+            out.writeInt(totalLen);
+            out.writeShort(headLen);
+            out.writeShort(protocolVersion);
+            out.writeInt(operation.getValue());
+            out.writeInt(param);
+            if (data != null && data.length > 0) {
+                out.write(data);
             }
-        } catch (IOException e) {
-            log.error(e.toString());
-            return false;
+            out.flush();
         }
+//        } catch (IOException e) {
+//            log.error(e.toString());
+//            return false;
+//        }
     }
 
-    public boolean sendSocketData(OperationEnum operation, int totalLen, byte[] data) {
-        return sendSocketData(totalLen, HEAD_LEN, PROTOCOL_VERSION, operation, PARAM, data);
+    public void sendSocketData(OperationEnum operation, int totalLen, byte[] data) throws IOException {
+        sendSocketData(totalLen, HEAD_LEN, PROTOCOL_VERSION, operation, PARAM, data);
     }
 
-    public boolean sendSocketData( OperationEnum operation, String data) {
+    public void sendSocketData(OperationEnum operation, String data) throws IOException {
         int totalLen = data.length() + 16;
-        return sendSocketData(operation, totalLen, data.getBytes(StandardCharsets.UTF_8));
+        sendSocketData(operation, totalLen, data.getBytes(StandardCharsets.UTF_8));
     }
 
-    public boolean sendSocketData(OperationEnum operation, Object obj) {
-        return sendSocketData( operation, JSON.toJSONString(obj));
+    public void sendSocketData(OperationEnum operation, Object obj) throws IOException {
+        sendSocketData(operation, JSON.toJSONString(obj));
     }
 
-    public boolean sendHeartBeat() {
-        return sendSocketData(OperationEnum.HEARTBEAT, 16, null);
+    public void sendHeartBeat() throws IOException {
+        sendSocketData(OperationEnum.HEARTBEAT, 16, null);
     }
 
-    public boolean sendAuth(long uId, long roomId, String token) {
+    public void sendAuth(long uId, long roomId, String token) throws IOException {
         SendAuthDO sendAuthData = new SendAuthDO(uId, roomId, token);
-        return sendSocketData(OperationEnum.AUTH, sendAuthData);
+        sendSocketData(OperationEnum.AUTH, sendAuthData);
     }
 }

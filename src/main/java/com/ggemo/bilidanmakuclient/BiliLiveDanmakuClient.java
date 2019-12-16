@@ -58,14 +58,6 @@ public class BiliLiveDanmakuClient {
         });
     }
 
-//    public BiliLiveDanmakuClient(long roomId, long uId) {
-//        this(roomId, uId, new HandlerHolder());
-//    }
-
-//    public BiliLiveDanmakuClient(long roomId) {
-//        this(roomId, (long) (1e14 + 2e14 * RANDOM.nextDouble()));
-//    }
-
     public BiliLiveDanmakuClient(long roomId, HandlerHolder handlerHolder) {
         this(roomId, (long) (1e14 + 2e14 * RANDOM.nextDouble()), handlerHolder);
     }
@@ -98,7 +90,7 @@ public class BiliLiveDanmakuClient {
         }
     }
 
-    private Socket connect() throws IOException {
+    private Socket connect() {
         if (hostServerToken == null) {
             while (true) {
                 try {
@@ -121,26 +113,31 @@ public class BiliLiveDanmakuClient {
             InetSocketAddress address = new InetSocketAddress(hostServer.getHost(), hostServer.getPort());
 
             socket = new Socket();
-//            try {
+            try {
                 socket.setReceiveBufferSize(RECEIVE_BUFFER_SIZE);
                 socket.connect(address);
                 wsClient = new WsClient(socket);
-                if (wsClient.sendAuth(this.uId, this.roomId, hostServerToken)) {
-                    heartbeatTask = heartbeatThreadPool.scheduleAtFixedRate(wsClient::sendHeartBeat, 2, HEARTBEAT_INTERVAL, TimeUnit.SECONDS);
-                    return socket;
-                } else {
-                    cleanHeartBeatTask();
+                wsClient.sendAuth(this.uId, this.roomId, hostServerToken);
+                WsClient finalWsClient = wsClient;
+                heartbeatTask = heartbeatThreadPool.scheduleAtFixedRate(() -> {
                     try {
-                        socket.close();
+                        finalWsClient.sendHeartBeat();
+                    } catch (IOException e) {
+                        log.error(e.toString());
+                        cleanHeartBeatTask();
+                    }
+                }, 2, HEARTBEAT_INTERVAL, TimeUnit.SECONDS);
+                return socket;
+            } catch (IOException e) {
+                log.error(e.toString());
+                cleanHeartBeatTask();
+                try {
+                    socket.close();
                 } catch (IOException ignored) {
                 }
-                }
-//            } catch (IOException e) {
-//                log.error(e.toString());
-//                cleanHeartBeatTask();
-//            }
+            }
         }
-        return socket;
+        return null;
     }
 
     /**
@@ -149,26 +146,24 @@ public class BiliLiveDanmakuClient {
     public void start() {
         while (true) {
             Socket socket = null;
-            try {
-                socket = connect();
-            }catch (IOException e){
-                log.error(e.toString());
-                cleanHeartBeatTask();
+            socket = connect();
+
+            if (socket == null || socket.isClosed()) {
                 continue;
             }
-            if (socket != null && !socket.isClosed()) {
-                HandleDataLoop hdp = new HandleDataLoop(socket, roomId, this.handlerHolder);
+
+            HandleDataLoop hdp = new HandleDataLoop(socket, roomId, this.handlerHolder);
+            try {
+                hdp.start();
+            } catch (IOException e) {
+                log.error(e.toString());
+                cleanHeartBeatTask();
                 try {
-                    hdp.start();
-                } catch (IOException e) {
-                    log.error(e.toString());
-                    cleanHeartBeatTask();
-                    try {
-                        socket.close();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
+                    socket.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
+
             }
         }
     }
