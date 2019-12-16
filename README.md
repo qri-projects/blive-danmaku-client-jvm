@@ -1,4 +1,4 @@
-# bilibili直播弹幕客户端
+# bilibili直播弹幕客户端Java版
 ## 安装
 本项目使用maven作为版本管理工具  
 安装见[本仓库packages](https://github.com/HHHHhgqcdxhg/bili-danmaku-client/packages)    
