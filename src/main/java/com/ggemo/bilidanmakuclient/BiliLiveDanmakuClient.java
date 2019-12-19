@@ -86,7 +86,7 @@ public class BiliLiveDanmakuClient {
 
         this.parseServerConf(danmakuServerConfResponseData);
         if (this.hostServerList == null || this.hostServerList.isEmpty()) {
-            throw new BiliDanmakuClientException("初始化error, hostServerList为null");
+            throw new BiliDanmakuClientException("initRoom error, hostServerList为null");
         }
     }
 

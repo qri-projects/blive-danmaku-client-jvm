@@ -29,7 +29,7 @@ public class HandleDataLoop {
             int bufferSize = 10 * 1024;
 
             bufferSize = socket.getReceiveBufferSize();
-            log.info("连接成功" + "真实直播间ID：" + roomId);
+            log.info("connect successed. real roomId：" + roomId);
             byte[] ret = new byte[bufferSize];
 //            try {
             while (true) {
@@ -48,13 +48,13 @@ public class HandleDataLoop {
 
         int dataLength = data.length;
         if (dataLength < 16) {
-            log.info("错误的数据");
+            log.info("wrong data");
         } else {
             DataInputStream inputStream = new DataInputStream(new ByteArrayInputStream(data));
             try {
                 int msgLength = inputStream.readInt();
                 if (msgLength < 16) {
-                    log.info("可能需要扩大缓冲区大小");
+                    log.info("maybe need expand size of cache");
                 } else if (msgLength > 16 && msgLength == dataLength) {
 
                     // 其实是两个char
