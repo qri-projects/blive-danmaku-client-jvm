@@ -8,3 +8,7 @@ Sample见[/test/java/com/ggemo/bilidanmakuclient/Sample.java](https://github.com
 
 建议使用OopCmdHandler  
 OopCmdHandler支持的事件:Danmaku, SendGift, GuardBuy, SuperChat  
+
+## TODO
+突然感觉Oop那个包应该单独拿出来作为一个module,下周回来搞搞看  
+
