@@ -168,26 +168,6 @@ public class BiliLiveDanmakuClient {
         }
     }
 
-//    public void start(int nThreads) {
-//        var pool = Executors.newFixedThreadPool(nThreads, r -> {
-//            Thread t = new Thread(r);
-//            t.setName("运行线程");
-//            return t;
-//        });
-//        for (int i = 0; i < nThreads; i++) {
-//            pool.execute(this::start);
-//        }
-//    }
-//
-//    public void startSync(int nThreads){
-//        CountDownLatch latch = new CountDownLatch(1);
-//        start(nThreads);
-//        try {
-//            latch.await();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     boolean cleanHeartBeatTask() {
         return this.heartbeatTask.cancel(true);
