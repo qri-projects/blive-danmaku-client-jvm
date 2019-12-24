@@ -13,6 +13,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class DanmakuData implements CmdData {
     private static final String CMD = "DANMU_MSG";
     private static final long serialVersionUID = -198478175324866238L;
