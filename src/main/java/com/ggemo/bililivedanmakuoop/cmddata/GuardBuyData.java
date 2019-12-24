@@ -9,11 +9,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @ToString
 public class GuardBuyData implements CmdData {
+    private static final long serialVersionUID = 2422365003940572831L;
+
     @JSONField(name = "uid")
     long userId;
 

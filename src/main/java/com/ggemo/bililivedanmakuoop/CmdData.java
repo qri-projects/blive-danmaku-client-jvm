@@ -1,4 +1,6 @@
 package com.ggemo.bililivedanmakuoop;
 
-public interface CmdData {
+import java.io.Serializable;
+
+public interface CmdData extends Serializable {
 }

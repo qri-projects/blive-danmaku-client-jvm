@@ -7,6 +7,7 @@ import com.ggemo.bililivedanmakuoop.CmdData;
 import com.ggemo.bililivedanmakuoop.util.StringUtil;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @ToString
@@ -15,6 +16,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SendGiftData implements CmdData {
+    private static final long serialVersionUID = -268502141127829004L;
+
     @Data
     public static class SendMaster {
         @JSONField(name = "uid")

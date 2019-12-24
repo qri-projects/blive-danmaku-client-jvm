@@ -7,12 +7,16 @@ import com.ggemo.bililivedanmakuoop.CmdData;
 import com.ggemo.bililivedanmakuoop.util.StringUtil;
 import lombok.*;
 
+import java.io.Serializable;
+
 @ToString
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class SuperChatData implements CmdData {
+    private static final long serialVersionUID = 5866964280953314125L;
+
     @Data
     public static class MedalInfo{
         @JSONField(name = "icon_id")
