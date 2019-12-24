@@ -1,15 +1,15 @@
-package com.ggemo.bilidanmakuclient.oop.cmddata;
+package com.ggemo.bililivedanmakuoop.cmddata;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.ggemo.bilidanmakuclient.oop.CmdData;
+import com.ggemo.bililivedanmakuoop.CmdData;
+
+import org.apache.commons.lang.StringUtils;
 import lombok.*;
-import org.testcontainers.shaded.org.apache.commons.lang.StringUtils;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @ToString
 public class DanmakuData implements CmdData {
     private static final String CMD = "DANMU_MSG";
@@ -217,6 +217,23 @@ public class DanmakuData implements CmdData {
     Object param2;
     Object param3;
     Object param4;
+
+    long roomId;
+
+    public DanmakuData(Info info, String content, UserInfo userInfo, UserMedal userMedal, UserLevel userLevel, Title title, int param0, int privilegeType, Object param1, Object param2, Object param3, Object param4) {
+        this.info = info;
+        this.content = content;
+        this.userInfo = userInfo;
+        this.userMedal = userMedal;
+        this.userLevel = userLevel;
+        this.title = title;
+        this.param0 = param0;
+        this.privilegeType = privilegeType;
+        this.param1 = param1;
+        this.param2 = param2;
+        this.param3 = param3;
+        this.param4 = param4;
+    }
 
     public DanmakuData(JSONArray o) {
         this(new Info(o.getJSONArray(0)), o.getString(1), new UserInfo(o.getJSONArray(2)), new UserMedal(o.getJSONArray(3)), new UserLevel(o.getJSONArray(4)), new Title(o.getJSONArray(5)), o.getInteger(6), o.getInteger(7), o.getObject(8, Object.class), o.getObject(9, Object.class), o.getObject(10, Object.class), o.getObject(11, Object.class));

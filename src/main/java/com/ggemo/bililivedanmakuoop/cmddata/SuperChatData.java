@@ -1,11 +1,10 @@
-package com.ggemo.bilidanmakuclient.oop.cmddata;
+package com.ggemo.bililivedanmakuoop.cmddata;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
-import com.ggemo.bilidanmakuclient.oop.CmdData;
-import com.ggemo.bilidanmakuclient.oop.handler.SuperchatHandler;
-import com.ggemo.bilidanmakuclient.oop.util.StringUtil;
+import com.ggemo.bililivedanmakuoop.CmdData;
+import com.ggemo.bililivedanmakuoop.util.StringUtil;
 import lombok.*;
 
 @ToString

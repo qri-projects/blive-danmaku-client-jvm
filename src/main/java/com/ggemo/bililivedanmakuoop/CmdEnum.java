@@ -1,10 +1,10 @@
-package com.ggemo.bilidanmakuclient.oop;
+package com.ggemo.bililivedanmakuoop;
 
 import com.alibaba.fastjson.TypeReference;
-import com.ggemo.bilidanmakuclient.oop.cmddata.DanmakuData;
-import com.ggemo.bilidanmakuclient.oop.cmddata.GuardBuyData;
-import com.ggemo.bilidanmakuclient.oop.cmddata.SendGiftData;
-import com.ggemo.bilidanmakuclient.oop.cmddata.SuperChatData;
+import com.ggemo.bililivedanmakuoop.cmddata.DanmakuData;
+import com.ggemo.bililivedanmakuoop.cmddata.GuardBuyData;
+import com.ggemo.bililivedanmakuoop.cmddata.SendGiftData;
+import com.ggemo.bililivedanmakuoop.cmddata.SuperChatData;
 import lombok.Getter;
 
 public enum CmdEnum {
