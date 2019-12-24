@@ -222,7 +222,7 @@ public class DanmakuData implements CmdData {
     Object param3;
     Object param4;
 
-    long roomId;
+    Long roomId;
 
     public DanmakuData(Info info, String content, UserInfo userInfo, UserMedal userMedal, UserLevel userLevel, Title title, int param0, int privilegeType, Object param1, Object param2, Object param3, Object param4) {
         this.info = info;

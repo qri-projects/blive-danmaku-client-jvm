@@ -159,6 +159,8 @@ public class SuperChatData implements CmdData {
 
     Gift gift;
 
+    Long roomId;
+
     public static SuperChatData fromJSON(String json) {
         json = StringUtil.unicodeToString(json);
         return fromJSON(JSON.parseObject(json).getJSONObject("data"));

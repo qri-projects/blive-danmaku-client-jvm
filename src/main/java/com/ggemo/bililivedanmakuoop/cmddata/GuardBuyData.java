@@ -44,6 +44,8 @@ public class GuardBuyData implements CmdData {
     @JSONField(name = "end_time")
     long endTime;
 
+    Long roomId;
+
     public static GuardBuyData fromJSON(String json) {
         return fromJSON(JSON.parseObject(json).getJSONObject("data"));
     }

@@ -27,7 +27,7 @@ public class SendGiftData implements CmdData {
         String userName;
 
         @JSONField(name = "room_id")
-        long roomId;
+        Long roomId;
     }
 
     @Data
@@ -204,6 +204,8 @@ public class SendGiftData implements CmdData {
 
     @JSONField(name = "is_first")
     boolean firstOrnot;
+
+    Long roomId;
 
     public static SendGiftData fromJSON(String json) {
         json = StringUtil.unicodeToString(json);
