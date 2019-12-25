@@ -18,7 +18,9 @@ public class SuperChatData implements CmdData {
     private static final long serialVersionUID = 5866964280953314125L;
 
     @Data
-    public static class MedalInfo{
+    @NoArgsConstructor
+    public static class MedalInfo implements Serializable {
+        private static final long serialVersionUID = 6432730799445013183L;
         @JSONField(name = "icon_id")
         long iconId;
 
@@ -44,7 +46,9 @@ public class SuperChatData implements CmdData {
     }
 
     @Data
-    public static class UserInfo{
+    @NoArgsConstructor
+    public static class UserInfo implements Serializable {
+        private static final long serialVersionUID = -1705388283578269848L;
         @JSONField(name = "uname")
         String userName;
 
@@ -84,7 +88,9 @@ public class SuperChatData implements CmdData {
     }
 
     @Data
-    public static class Gift{
+    @NoArgsConstructor
+    public static class Gift implements Serializable {
+        private static final long serialVersionUID = 3959300171745395358L;
         int num;
 
         @JSONField(name = "gift_id")

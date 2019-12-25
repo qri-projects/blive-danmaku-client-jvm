@@ -6,8 +6,6 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.ggemo.bililivedanmakuoop.CmdData;
 import lombok.*;
 
-import java.io.Serializable;
-
 @Getter
 @Setter
 @AllArgsConstructor

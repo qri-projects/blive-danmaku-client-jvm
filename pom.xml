@@ -6,8 +6,8 @@
 
     <groupId>com.ggemo</groupId>
     <artifactId>bili-danmaku-client</artifactId>
-    <packaging>pom</packaging>
-    <version>1.0.5</version>
+    <version>1.0.8</version>
+    <packaging>jar</packaging>
 
     <distributionManagement>
         <repository>
@@ -72,6 +72,7 @@
                 <configuration>
                     <source>11</source>
                     <target>11</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
         </plugins>

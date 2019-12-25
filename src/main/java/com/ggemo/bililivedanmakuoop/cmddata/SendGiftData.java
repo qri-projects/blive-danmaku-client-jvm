@@ -19,7 +19,9 @@ public class SendGiftData implements CmdData {
     private static final long serialVersionUID = -268502141127829004L;
 
     @Data
-    public static class SendMaster {
+    @NoArgsConstructor
+    public static class SendMaster implements Serializable  {
+        private static final long serialVersionUID = -3158493796368717988L;
         @JSONField(name = "uid")
         long userId;
 
@@ -31,7 +33,9 @@ public class SendGiftData implements CmdData {
     }
 
     @Data
-    public static class ComboSend {
+    @NoArgsConstructor
+    public static class ComboSend implements Serializable  {
+        private static final long serialVersionUID = -4391068271941672019L;
         @JSONField(name = "uid")
         long userId;
 
@@ -57,7 +61,9 @@ public class SendGiftData implements CmdData {
     }
 
     @Data
-    public static class BatchComboSend {
+    @NoArgsConstructor
+    public static class BatchComboSend implements Serializable  {
+        private static final long serialVersionUID = -2815682554464578834L;
         @JSONField(name = "uid")
         long userId;
 

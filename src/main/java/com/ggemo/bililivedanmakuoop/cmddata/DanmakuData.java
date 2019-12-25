@@ -19,7 +19,10 @@ public class DanmakuData implements CmdData {
     private static final long serialVersionUID = -198478175324866238L;
 
     @Data
-    public static class Info {
+    @NoArgsConstructor
+    public static class Info implements Serializable {
+        private static final long serialVersionUID = 5551992099455324583L;
+
         int param0;
         int mode;
         int fontSize;
@@ -52,7 +55,9 @@ public class DanmakuData implements CmdData {
     }
 
     @Data
-    public static class UserInfo {
+    @NoArgsConstructor
+    public static class UserInfo implements Serializable  {
+        private static final long serialVersionUID = -4600817537319374039L;
         long userId;
         String userName;
         boolean adminOrnot;
@@ -73,9 +78,6 @@ public class DanmakuData implements CmdData {
             this.userNameColor = userNameColor;
         }
 
-        public UserInfo() {
-        }
-
         public UserInfo(JSONArray o) {
             this();
             if(o.size() == 8) {
@@ -92,7 +94,9 @@ public class DanmakuData implements CmdData {
     }
 
     @Data
-    public static class UserMedal {
+    @NoArgsConstructor
+    public static class UserMedal implements Serializable  {
+        private static final long serialVersionUID = -5479233442964368371L;
         int medalLevel;
         String medalName;
         String userName;
@@ -111,9 +115,6 @@ public class DanmakuData implements CmdData {
             this.specialMedalOrnot = specialMedalOrnot;
         }
 
-        public UserMedal() {
-        }
-
         public UserMedal(JSONArray o) {
             this();
             if(o.size() == 7) {
@@ -130,7 +131,9 @@ public class DanmakuData implements CmdData {
     }
 
     @Data
-    public static class UserLevel {
+    @NoArgsConstructor
+    public static class UserLevel implements Serializable  {
+        private static final long serialVersionUID = -6033907377652842L;
         int userLevel;
         int param0;
         String userLevelColor;
@@ -141,9 +144,6 @@ public class DanmakuData implements CmdData {
             this.param0 = param0;
             this.userLevelColor = userLevelColor;
             this.userLevelRank = userLevelRank;
-        }
-
-        public UserLevel() {
         }
 
         public UserLevel(JSONArray o) {
@@ -158,16 +158,15 @@ public class DanmakuData implements CmdData {
     }
 
     @Data
-    public static class Title {
+    @NoArgsConstructor
+    public static class Title implements Serializable  {
+        private static final long serialVersionUID = 7330787924476183960L;
         String oldTitle;
         String newTitle;
 
         public Title(String oldTitle, String newTitle) {
             this.oldTitle = oldTitle;
             this.newTitle = newTitle;
-        }
-
-        public Title() {
         }
 
         public Title(JSONArray o) {
