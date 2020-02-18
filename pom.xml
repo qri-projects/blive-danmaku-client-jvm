@@ -4,15 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ggemo</groupId>
+    <groupId>com.ggemo.va</groupId>
     <artifactId>bili-danmaku-client</artifactId>
-    <version>1.0.8</version>
+    <version>1.0.10</version>
     <packaging>jar</packaging>
 
     <distributionManagement>
         <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/HHHHhgqcdxhg/bili-danmaku-client</url>
+            <id>rdc-releases</id>
+            <url>https://repo.rdc.aliyun.com/repository/79664-release-1FLEvJ/</url>
         </repository>
     </distributionManagement>
     <dependencies>
