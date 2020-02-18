@@ -41,8 +41,10 @@ public class BiliLiveDanmakuClient {
     private static final int HEARTBEAT_INTERVAL = 20;
 
     // 单位: 毫秒
+    // 发送heartBeat 20s发一次, 50s都没发过认为发送失败掉线
     private static final int MAX_SEND_HEARTBEAT_INTERVAL = 50000;
-    private static final int MAX_RECEIVE_HEARTBEAT_INTERVAL = 50000;
+    // 接收heartBeat 正常应该几秒收到一次, 20s都没收到认为接收掉线
+    private static final int MAX_RECEIVE_HEARTBEAT_INTERVAL = 20000;
     private static final int CHECK_HEARTBEAT_INTERVAL = 10000;
 
     private HandlerHolder handlerHolder;
@@ -193,16 +195,10 @@ public class BiliLiveDanmakuClient {
                     long current = System.currentTimeMillis();
                     if (current - sendedHeartBeatSuccessedTime.get() > MAX_SEND_HEARTBEAT_INTERVAL) {
                         cleanHeartBeatTask();
-                        if (!hdpTask.isCancelled()) {
-                            hdpTask.cancel(true);
-                        }
                         break;
                     }
                     if (current - receivedHeartBeatSuccessedTime.get() > MAX_RECEIVE_HEARTBEAT_INTERVAL) {
                         cleanHeartBeatTask();
-                        if (!hdpTask.isCancelled()) {
-                            hdpTask.cancel(true);
-                        }
                         break;
                     }
                 } catch (InterruptedException e) {
