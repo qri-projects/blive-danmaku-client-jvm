@@ -8,18 +8,22 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
 public class HandleDataLoop {
     private Socket socket;
     private long roomId;
+    private AtomicLong receivedHeartBeatTime;
 
     private HandlerHolder handlerHolder;
 
-    public HandleDataLoop(Socket socket, long roomId, HandlerHolder handlerHolder) {
+    public HandleDataLoop(Socket socket, long roomId, HandlerHolder handlerHolder, AtomicLong receivedHeartBeatTime) {
         this.socket = socket;
         this.roomId = roomId;
         this.handlerHolder = handlerHolder;
+        this.receivedHeartBeatTime = receivedHeartBeatTime;
     }
 
     public void start() throws IOException {
@@ -59,9 +63,9 @@ public class HandleDataLoop {
                     inputStream.readInt();
 
                     int action = inputStream.readInt() - 1;
-
                     // 直播间在线用户数目
                     if (action == 2) {
+                        this.receivedHeartBeatTime.set(System.currentTimeMillis());
                         inputStream.readInt();
                         int userCount = inputStream.readInt();
                         handlerHolder.handleUserCount(userCount);
