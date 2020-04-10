@@ -11,6 +11,7 @@ import com.ggemo.va.bililivedanmakuoop.cmddata.SuperChatData;
 import com.ggemo.va.bililivedanmakuoop.handler.*;
 import com.ggemo.va.bililivedanmakuoop.handler.*;
 import org.junit.Test;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.util.RootNameLookup;
 
 
 public class Sample {
@@ -44,7 +45,7 @@ public class Sample {
 
     public static void oopPrint(long roomId) {
         // OopCmdHandler实现了CmdHandler接口, 本质是将事件字符串转换为对应对象
-        OopCmdHandler oopCmdHandler = new OopCmdHandler();
+        OopCmdHandler oopCmdHandler = new OopCmdHandler(roomId);
 
         // 收到弹幕时打印com.ggemo.bilidanmakuclient.oop.cmddata.DanmakuData对象
         oopCmdHandler.addDanmakuHandler(new DanmakuHandler() {

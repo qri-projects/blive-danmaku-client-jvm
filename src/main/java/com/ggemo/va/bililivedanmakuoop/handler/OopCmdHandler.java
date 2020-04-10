@@ -19,16 +19,18 @@ public class OopCmdHandler implements CmdHandler {
     private Set<GuardBuyHandler> guardBuyHandlers;
     private Set<SendGiftHandler> sendGiftHandlers;
     private Set<SuperchatHandler> superchatHandlers;
+    private long roomId;
 
-    public OopCmdHandler() {
+    public OopCmdHandler(long roomId) {
+        this.roomId = roomId;
         this.danmakuHandlers = new HashSet<>();
         this.guardBuyHandlers = new HashSet<>();
         this.sendGiftHandlers = new HashSet<>();
         this.superchatHandlers = new HashSet<>();
     }
 
-    public OopCmdHandler(DanmakuHandler danmakuHandler, GuardBuyHandler guardBuyHandler, SendGiftHandler sendGiftHandler, SuperchatHandler superchatHandler) {
-        this();
+    public OopCmdHandler(long roomId, DanmakuHandler danmakuHandler, GuardBuyHandler guardBuyHandler, SendGiftHandler sendGiftHandler, SuperchatHandler superchatHandler) {
+        this(roomId);
         addDanmakuHandler(danmakuHandler);
         addGuardBuyHandler(guardBuyHandler);
         addSendGiftHandler(sendGiftHandler);
@@ -73,6 +75,7 @@ public class OopCmdHandler implements CmdHandler {
         String cmd = jsonObject.getString("cmd");
         if (CmdEnum.DANMU_MSG.equalsStr(cmd)) {
             DanmakuData danmakuData = DanmakuData.fromJSON(jsonObject.getJSONArray("info"));
+            danmakuData.setRoomId(roomId);
             for (DanmakuHandler handler : danmakuHandlers) {
                 try {
                     handler.handle(danmakuData);
@@ -82,6 +85,7 @@ public class OopCmdHandler implements CmdHandler {
             }
         } else if (CmdEnum.GUARD_BUY.equalsStr(cmd)) {
             GuardBuyData guardBuyData = GuardBuyData.fromJSON(jsonObject.getJSONObject("data"));
+            guardBuyData.setRoomId(roomId);
             for (GuardBuyHandler handler : guardBuyHandlers) {
                 try {
                     handler.handle(guardBuyData);
@@ -91,6 +95,7 @@ public class OopCmdHandler implements CmdHandler {
             }
         } else if (CmdEnum.SEND_GIFT.equalsStr(cmd)) {
             SendGiftData sendGiftData = SendGiftData.fromJSON(jsonObject.getJSONObject("data"));
+            sendGiftData.setRoomId(roomId);
             for (SendGiftHandler handler : sendGiftHandlers) {
                 try {
                     handler.handle(sendGiftData);
@@ -100,6 +105,7 @@ public class OopCmdHandler implements CmdHandler {
             }
         } else if (CmdEnum.SUPER_CHAT_MESSAGE.equalsStr(cmd)) {
             SuperChatData superChatData = SuperChatData.fromJSON(jsonObject.getJSONObject("data"));
+            superChatData.setRoomId(roomId);
             for (SuperchatHandler handler : superchatHandlers) {
                 try {
                     handler.handle(superChatData);
