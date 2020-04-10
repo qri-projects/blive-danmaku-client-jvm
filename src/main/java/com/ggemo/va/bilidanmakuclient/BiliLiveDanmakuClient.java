@@ -19,6 +19,7 @@ import java.util.Random;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.zip.DataFormatException;
 
 @Slf4j
 public class BiliLiveDanmakuClient {
@@ -100,8 +101,6 @@ public class BiliLiveDanmakuClient {
         DanmakuServerConfResponseData danmakuServerConfResponseData;
         danmakuServerConfResponseData = danmakuServerConfResponse.getData();
         this.parseServerConf(danmakuServerConfResponseData);
-
-        this.parseServerConf(danmakuServerConfResponseData);
         if (this.hostServerList == null || this.hostServerList.isEmpty()) {
             throw new BiliDanmakuClientException("initRoom error, hostServerList为null");
         }
@@ -175,7 +174,7 @@ public class BiliLiveDanmakuClient {
             hdpTask = CompletableFuture.supplyAsync(() -> {
                 try {
                     hdp.start();
-                } catch (IOException e) {
+                } catch (IOException | DataFormatException e) {
                     log.error("error in start " + e.toString());
                     cleanHeartBeatTask();
                     try {
