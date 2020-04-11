@@ -174,7 +174,7 @@ public class BiliLiveDanmakuClient {
             hdpTask = CompletableFuture.supplyAsync(() -> {
                 try {
                     hdp.start();
-                } catch (IOException | DataFormatException e) {
+                } catch (IOException e) {
                     log.error("error in start " + e.toString());
                     cleanHeartBeatTask();
                     try {
