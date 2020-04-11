@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.zip.Inflater;
 
 @Slf4j
 public class HandleDataLoop {
@@ -59,8 +60,8 @@ public class HandleDataLoop {
                     log.info("maybe need expand size of cache");
                 } else if (msgLength > 16 && msgLength == dataLength) {
 
-                    // 其实是两个char
-                    inputStream.readInt();
+                    short headerLength = inputStream.readShort();
+                    short version = inputStream.readShort();
 
                     int action = inputStream.readInt() - 1;
                     // 直播间在线用户数目
@@ -70,12 +71,30 @@ public class HandleDataLoop {
                         int userCount = inputStream.readInt();
                         handlerHolder.handleUserCount(userCount);
                     } else if (action == 4) {
-                        inputStream.readInt();
+                        int param = inputStream.readInt();
                         int msgBodyLength = dataLength - 16;
                         byte[] msgBody = new byte[msgBodyLength];
-                        if (inputStream.read(msgBody) == msgBodyLength) {
+                        inputStream.read(msgBody);
+                        if (version != 2) {
                             String jsonStr = new String(msgBody, StandardCharsets.UTF_8);
                             handlerHolder.handleCmd(jsonStr);
+                        } else {
+                            Inflater inflater = new Inflater();
+                            inflater.setInput(msgBody);
+                            while (!inflater.finished()){
+                                byte[] header = new byte[16];
+                                inflater.inflate(header, 0, 16);
+                                var headerStream = new DataInputStream(new ByteArrayInputStream(header));
+                                int innerMsgLen = headerStream.readInt();
+                                short innerHeaderLength = headerStream.readShort();
+                                short innerVersion = headerStream.readShort();
+                                int innerAction = headerStream.readInt() - 1;
+                                int innerParam = headerStream.readInt();
+                                byte[] innerData = new byte[innerMsgLen - 16];
+                                inflater.inflate(innerData, 0, innerData.length);
+                                String jsonStr = new String(innerData, StandardCharsets.UTF_8);
+                                handlerHolder.handleCmd(jsonStr);
+                            }
                         }
                     }
                 } else if (msgLength > 16 && msgLength < dataLength) {
