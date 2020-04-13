@@ -9,6 +9,7 @@ import com.ggemo.va.bilidanmakuclient.http.response.impl.DanmakuServerConfRespon
 import com.ggemo.va.bilidanmakuclient.http.response.impl.RoomInitResponse;
 import com.ggemo.va.bilidanmakuclient.http.response.responsedataa.DanmakuServerConfResponseData;
 import com.ggemo.va.bilidanmakuclient.http.response.responsedataa.RoomInitResponseData;
+import com.ggemo.va.bilidanmakuclient.util.ThreadUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -23,6 +24,7 @@ import java.util.zip.DataFormatException;
 
 @Slf4j
 public class BiliLiveDanmakuClient {
+    private static int START_COUNT = -1;
     private long tmpRoomId, uId, roomId;
 
     private List<DanmakuServerConfResponseData.HostServerInfo> hostServerList;
@@ -48,10 +50,15 @@ public class BiliLiveDanmakuClient {
     private static final int MAX_RECEIVE_HEARTBEAT_INTERVAL = 20000;
     private static final int CHECK_HEARTBEAT_INTERVAL = 10000;
 
+    private static final int RECONNECT_IDLE = 10000;
+
     private HandlerHolder handlerHolder;
 
     private AtomicLong sendedHeartBeatSuccessedTime;
     private AtomicLong receivedHeartBeatSuccessedTime;
+
+    private Socket socket;
+    private WsClient wsClient;
 
     public BiliLiveDanmakuClient(long roomId, long uId, HandlerHolder handlerHolder) {
         this.tmpRoomId = roomId;
@@ -117,8 +124,7 @@ public class BiliLiveDanmakuClient {
             }
         }
 
-        Socket socket = null;
-        WsClient wsClient = null;
+        socket = null;
 
         // for循环用来从后往前选择hostServer
         for (int i = 0; i < this.hostServerList.size(); i++) {
@@ -136,20 +142,22 @@ public class BiliLiveDanmakuClient {
                 wsClient.sendAuth(this.uId, this.roomId, hostServerToken);
                 WsClient finalWsClient = wsClient;
                 heartbeatTask = heartbeatThreadPool.scheduleAtFixedRate(() -> {
+                    ThreadUtil.setThreadName("heart_beat_thread_" + roomId + "_" + START_COUNT);
                     try {
                         finalWsClient.sendHeartBeat();
                         sendedHeartBeatSuccessedTime.set(System.currentTimeMillis());
                     } catch (IOException e) {
-                        log.error("error in heartbeatTask " + e.toString());
+                        log.error(e.toString());
                         cleanHeartBeatTask();
                     }
                 }, 2, HEARTBEAT_INTERVAL, TimeUnit.SECONDS);
                 return socket;
             } catch (IOException e) {
-                log.error("error out of heartbeatTask " + e.toString());
+                log.error("error about heartbeatTask " + e.toString());
                 cleanHeartBeatTask();
                 try {
                     socket.close();
+                    socket = null;
                 } catch (IOException ignored) {
                 }
             }
@@ -161,21 +169,33 @@ public class BiliLiveDanmakuClient {
      * sync
      */
     public void start() {
+        START_COUNT += 1;
+        String threadName = String.format("room_thread_%d_%d", roomId, START_COUNT);
+        ThreadUtil.setThreadName(threadName);
+
+        // 重连循环
         while (true) {
             Socket socket = null;
             socket = connect();
 
             if (socket == null || socket.isClosed()) {
+                try {
+                    Thread.sleep(RECONNECT_IDLE);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 continue;
             }
             HandleDataLoop hdp = new HandleDataLoop(socket, roomId, handlerHolder, receivedHeartBeatSuccessedTime);
 
             Socket finalSocket = socket;
             hdpTask = CompletableFuture.supplyAsync(() -> {
+                String hdpTaskThreadName = "hdp_thread_in_" + threadName;
+                ThreadUtil.setThreadName(hdpTaskThreadName);
                 try {
                     hdp.start();
                 } catch (IOException e) {
-                    log.error("error in start " + e.toString());
+                    log.error(e.toString());
                     cleanHeartBeatTask();
                     try {
                         finalSocket.close();
@@ -185,9 +205,10 @@ public class BiliLiveDanmakuClient {
                     return false;
                 }
                 return true;
-            });
+            }, Executors.newSingleThreadExecutor());
 
 
+            // 检测心跳循环
             while (true) {
                 try {
                     Thread.sleep(CHECK_HEARTBEAT_INTERVAL);
@@ -204,7 +225,11 @@ public class BiliLiveDanmakuClient {
                     e.printStackTrace();
                 }
             }
-
+            try {
+                Thread.sleep(RECONNECT_IDLE);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -212,9 +237,11 @@ public class BiliLiveDanmakuClient {
         boolean cancelSendHeartBeatRes = true, cancelReceiveHeartBeatRes = true;
         if (heartbeatTask != null && !heartbeatTask.isCancelled()) {
             cancelSendHeartBeatRes = heartbeatTask.cancel(true);
+            heartbeatTask = null;
         }
         if (hdpTask != null && !hdpTask.isCancelled()) {
             cancelReceiveHeartBeatRes = hdpTask.cancel(true);
+            hdpTask = null;
         }
         return cancelSendHeartBeatRes && cancelReceiveHeartBeatRes;
     }
