@@ -3,33 +3,51 @@ package com.ggemo.va.bililivedanmakuoop.handler;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ggemo.va.bilidanmakuclient.handler.CmdHandler;
-import com.ggemo.va.bililivedanmakuoop.CmdEnum;
-import com.ggemo.va.bililivedanmakuoop.cmddata.DanmakuData;
-import com.ggemo.va.bililivedanmakuoop.cmddata.GuardBuyData;
-import com.ggemo.va.bililivedanmakuoop.cmddata.SendGiftData;
-import com.ggemo.va.bililivedanmakuoop.cmddata.SuperChatData;
+import com.ggemo.va.bililivedanmakuoop.cmddataprocessor.DanmakuCmdDataProcessor;
+import com.ggemo.va.bililivedanmakuoop.cmddataprocessor.CmdDataProcessor;
+import com.ggemo.va.bililivedanmakuoop.cmddataprocessor.GuardBuyCmdDataProcessor;
+import com.ggemo.va.bililivedanmakuoop.cmddataprocessor.SendGiftCmdDataProcessor;
+import com.ggemo.va.bililivedanmakuoop.cmddataprocessor.SuperChatCmdDataProcessor;
+
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Slf4j
 public class OopCmdHandler implements CmdHandler {
-    private Set<DanmakuHandler> danmakuHandlers;
-    private Set<GuardBuyHandler> guardBuyHandlers;
-    private Set<SendGiftHandler> sendGiftHandlers;
-    private Set<SuperchatHandler> superchatHandlers;
-    private long roomId;
+    private final Set<DanmakuHandler> danmakuHandlers;
+    private final Set<GuardBuyHandler> guardBuyHandlers;
+    private final Set<SendGiftHandler> sendGiftHandlers;
+    private final Set<SuperChatHandler> superChatHandlers;
+
+    private final Map<String, CmdDataProcessor> cmdDataWrapperMap;
+    private final long roomId;
 
     public OopCmdHandler(long roomId) {
         this.roomId = roomId;
-        this.danmakuHandlers = new HashSet<>();
-        this.guardBuyHandlers = new HashSet<>();
-        this.sendGiftHandlers = new HashSet<>();
-        this.superchatHandlers = new HashSet<>();
+        DanmakuCmdDataProcessor danmakuProcessor =
+                new DanmakuCmdDataProcessor(this.danmakuHandlers = new HashSet<>(), roomId);
+        GuardBuyCmdDataProcessor guardBuyProcessor =
+                new GuardBuyCmdDataProcessor(this.guardBuyHandlers = new HashSet<>(), roomId);
+        SendGiftCmdDataProcessor sendGiftCmdDataProcessor =
+                new SendGiftCmdDataProcessor(this.sendGiftHandlers = new HashSet<>(), roomId);
+        SuperChatCmdDataProcessor superChatCmdDataProcessor =
+                new SuperChatCmdDataProcessor(this.superChatHandlers = new HashSet<>(), roomId);
+
+        cmdDataWrapperMap = new HashMap<>() {{
+            put(danmakuProcessor.getCmdEnum().getStrVal(), danmakuProcessor);
+            put(guardBuyProcessor.getCmdEnum().getStrVal(), guardBuyProcessor);
+            put(sendGiftCmdDataProcessor.getCmdEnum().getStrVal(), sendGiftCmdDataProcessor);
+            put(superChatCmdDataProcessor.getCmdEnum().getStrVal(), superChatCmdDataProcessor);
+        }};
     }
 
-    public OopCmdHandler(long roomId, DanmakuHandler danmakuHandler, GuardBuyHandler guardBuyHandler, SendGiftHandler sendGiftHandler, SuperchatHandler superchatHandler) {
+    public OopCmdHandler(long roomId, DanmakuHandler danmakuHandler, GuardBuyHandler guardBuyHandler,
+                         SendGiftHandler sendGiftHandler, SuperChatHandler superchatHandler,
+                         Map<String, CmdDataProcessor> cmdDataWrapperMap) {
         this(roomId);
         addDanmakuHandler(danmakuHandler);
         addGuardBuyHandler(guardBuyHandler);
@@ -61,57 +79,25 @@ public class OopCmdHandler implements CmdHandler {
         return sendGiftHandlers.remove(handler);
     }
 
-    public boolean addSuperchatHandler(SuperchatHandler handler) {
-        return superchatHandlers.add(handler);
+    public boolean addSuperchatHandler(SuperChatHandler handler) {
+        return superChatHandlers.add(handler);
     }
 
-    public boolean removeSuperchatHandler(SuperchatHandler handler) {
-        return superchatHandlers.remove(handler);
+    public boolean removeSuperchatHandler(SuperChatHandler handler) {
+        return superChatHandlers.remove(handler);
     }
 
     @Override
     public void handle(String str) {
         JSONObject jsonObject = JSON.parseObject(str);
         String cmd = jsonObject.getString("cmd");
-        if (CmdEnum.DANMU_MSG.equalsStr(cmd)) {
-            DanmakuData danmakuData = DanmakuData.fromJSON(jsonObject.getJSONArray("info"));
-            danmakuData.setRoomId(roomId);
-            for (DanmakuHandler handler : danmakuHandlers) {
-                try {
-                    handler.handle(danmakuData);
-                } catch (Exception e) {
-                    log.error(String.format("error while handling data. handler type: %s\nexception :%s\ndata: %s", handler.getClass().getName(), e, str));
-                }
-            }
-        } else if (CmdEnum.GUARD_BUY.equalsStr(cmd)) {
-            GuardBuyData guardBuyData = GuardBuyData.fromJSON(jsonObject.getJSONObject("data"));
-            guardBuyData.setRoomId(roomId);
-            for (GuardBuyHandler handler : guardBuyHandlers) {
-                try {
-                    handler.handle(guardBuyData);
-                } catch (Exception e) {
-                    log.error(String.format("error while handling data. handler type: %s\nexception :%s\ndata: %s", handler.getClass().getName(), e, str));
-                }
-            }
-        } else if (CmdEnum.SEND_GIFT.equalsStr(cmd)) {
-            SendGiftData sendGiftData = SendGiftData.fromJSON(jsonObject.getJSONObject("data"));
-            sendGiftData.setRoomId(roomId);
-            for (SendGiftHandler handler : sendGiftHandlers) {
-                try {
-                    handler.handle(sendGiftData);
-                } catch (Exception e) {
-                    log.error(String.format("error while handling data. handler type: %s\nexception :%s\ndata: %s", handler.getClass().getName(), e, str));
-                }
-            }
-        } else if (CmdEnum.SUPER_CHAT_MESSAGE.equalsStr(cmd)) {
-            SuperChatData superChatData = SuperChatData.fromJSON(jsonObject.getJSONObject("data"));
-            superChatData.setRoomId(roomId);
-            for (SuperchatHandler handler : superchatHandlers) {
-                try {
-                    handler.handle(superChatData);
-                } catch (Exception e) {
-                    log.error(String.format("error while handling data. handler type: %s\nexception :%s\ndata: %s", handler.getClass().getName(), e, str));
-                }
+        CmdDataProcessor processor = cmdDataWrapperMap.get(cmd);
+        if (processor != null) {
+            try {
+                processor.handle(jsonObject);
+            } catch (Exception e) {
+                log.error(String.format("error while handling data. handler type: %s\nexception :%s\ndata: %s", cmd, e,
+                        str));
             }
         }
     }

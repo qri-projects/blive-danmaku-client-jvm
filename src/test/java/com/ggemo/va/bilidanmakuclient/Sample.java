@@ -9,10 +9,8 @@ import com.ggemo.va.bililivedanmakuoop.cmddata.GuardBuyData;
 import com.ggemo.va.bililivedanmakuoop.cmddata.SendGiftData;
 import com.ggemo.va.bililivedanmakuoop.cmddata.SuperChatData;
 import com.ggemo.va.bililivedanmakuoop.handler.*;
-import com.ggemo.va.bililivedanmakuoop.handler.*;
-import org.junit.Test;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.util.RootNameLookup;
 
+import org.junit.Test;
 
 public class Sample {
     public static void simplePrint(long roomId) {
@@ -72,7 +70,7 @@ public class Sample {
         });
 
         // 收到醒目留言时打印com.ggemo.bilidanmakuclient.oop.cmddata.SuperChatData对象
-        oopCmdHandler.addSuperchatHandler(new SuperchatHandler() {
+        oopCmdHandler.addSuperchatHandler(new SuperChatHandler() {
             @Override
             public void handle(SuperChatData x) {
                 System.out.println(x);

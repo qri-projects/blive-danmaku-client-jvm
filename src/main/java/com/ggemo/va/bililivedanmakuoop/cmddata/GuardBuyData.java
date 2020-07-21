@@ -3,7 +3,7 @@ package com.ggemo.va.bililivedanmakuoop.cmddata;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
-import com.ggemo.va.bililivedanmakuoop.CmdData;
+
 import lombok.*;
 
 @Getter

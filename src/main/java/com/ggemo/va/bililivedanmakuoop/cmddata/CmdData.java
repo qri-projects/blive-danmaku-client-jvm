@@ -1,4 +1,4 @@
-package com.ggemo.va.bililivedanmakuoop;
+package com.ggemo.va.bililivedanmakuoop.cmddata;
 
 import java.io.Serializable;
 

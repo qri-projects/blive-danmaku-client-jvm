@@ -3,14 +3,11 @@ package com.ggemo.va.bililivedanmakuoop.cmddata;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.ggemo.va.bililivedanmakuoop.CmdData;
 
 import org.apache.commons.lang.StringUtils;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
