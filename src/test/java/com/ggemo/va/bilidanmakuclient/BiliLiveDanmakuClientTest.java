@@ -1,9 +1,11 @@
 package com.ggemo.va.bilidanmakuclient;
 
-import com.ggemo.va.bilidanmakuclient.handler.HandlerHolder;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -12,11 +14,11 @@ import java.util.Date;
 public class BiliLiveDanmakuClientTest {
     @Test
     public void test() {
-        HandlerHolder handlerHolder = new HandlerHolder();
-        handlerHolder.addUserCountHandler(x -> System.out.println("userCount: " + x));
-        handlerHolder.addCmdHandler(System.out::println);
-        BiliLiveDanmakuClient client = new BiliLiveDanmakuClient(336116L, handlerHolder);
-        client.start();
+//        HandlerHolder handlerHolder = new HandlerHolder();
+//        handlerHolder.setUserCountHandler(x -> System.out.println("userCount: " + x));
+//        handlerHolder.setCmdHandler(System.out::println);
+//        BiliLiveDanmakuClient client = new BiliLiveDanmakuClient(336116L, handlerHolder);
+//        client.start();
     }
 
     @Test
