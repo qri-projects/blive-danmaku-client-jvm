@@ -25,3 +25,7 @@
 hs_err_pid*
 target/
 logs/
+.gradle/
+blive-danmaku-client-jvm/build/
+
+*~
