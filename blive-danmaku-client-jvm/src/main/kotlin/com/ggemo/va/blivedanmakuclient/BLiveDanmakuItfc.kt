@@ -1,13 +1,10 @@
 package com.ggemo.va.blivedanmakuclientkt
 
-import com.ggemo.va.blivedanmakuclientkt.domain.ApplicationContext
-import com.ggemo.va.blivedanmakuclientkt.handlers.*
-
 
 interface BLiveDanmakuItfc {
-    fun buildContext(): ApplicationContext
+    val config: Config
 
-    fun doBusiness(roomId: Long)
+    fun start()
 
-    fun cancle(context: ApplicationContext)
+    fun cancel()
 }

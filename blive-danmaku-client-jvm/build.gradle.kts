@@ -12,7 +12,6 @@ dependencies {
     implementation("com.alibaba:fastjson:1.2.62")
     implementation("org.apache.httpcomponents:httpclient:4.5.13")
 
-    implementation("io.insert-koin:koin-core:3.1.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1")
     testImplementation(kotlin("test"))
     testImplementation("io.insert-koin:koin-test:3.1.1")
