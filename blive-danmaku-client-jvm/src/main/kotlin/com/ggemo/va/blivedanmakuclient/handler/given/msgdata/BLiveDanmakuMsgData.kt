@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
 import com.alibaba.fastjson.annotation.JSONField
-import com.ggemo.va.blivedanmakuclient.inner.util.StringUtils
+import com.ggemo.va.blivedanmakuclient.inner.util.stringUtils
 
 open class BLiveDanmakuMsgData {
     open class Cmd(val rawValue: String)
@@ -435,10 +435,10 @@ open class BLiveDanmakuMsgData {
             fun fromJSON(jsonObject: JSONObject): SuperChat {
                 val superCharData = jsonObject.toJavaObject(SuperChat::class.java)
                 superCharData.backgroundImageUrl =
-                    superCharData.backgroundImageUrl?.let { StringUtils.removeTransSlash(it) }
+                    superCharData.backgroundImageUrl?.let { stringUtils.removeTransSlash(it) }
                 val userInfo = superCharData.userInfo
-                userInfo?.userFaceImgUrl = userInfo?.userFaceImgUrl?.let { StringUtils.removeTransSlash(it) }
-                userInfo?.userFaceFrameImgUrl = userInfo?.userFaceFrameImgUrl?.let { StringUtils.removeTransSlash(it) }
+                userInfo?.userFaceImgUrl = userInfo?.userFaceImgUrl?.let { stringUtils.removeTransSlash(it) }
+                userInfo?.userFaceFrameImgUrl = userInfo?.userFaceFrameImgUrl?.let { stringUtils.removeTransSlash(it) }
                 return superCharData
             }
 

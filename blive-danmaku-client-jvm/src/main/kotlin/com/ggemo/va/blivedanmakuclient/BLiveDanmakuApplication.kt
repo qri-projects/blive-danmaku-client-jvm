@@ -32,9 +32,7 @@ class BLiveDanmakuApplication(override val config: Config) : BLiveDanmakuItfc {
             socketAuthSender.send(socket, realRoomId, danmakuServerInfo.token)
             coroutineScope {
                 launch {
-                    heartBeatLoopManager.start(
-                        socket, config.heartBeatInterval, this@BLiveDanmakuApplication
-                    )
+                    heartBeatLoopManager.start(socket, config.heartBeatInterval, this@BLiveDanmakuApplication)
                 }
                 launch(Dispatchers.IO) {
                     msgLoopManager.start(socket, config.handler, this@BLiveDanmakuApplication)

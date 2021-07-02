@@ -2,12 +2,7 @@ package com.ggemo.va.blivedanmakuclient.inner.util
 
 import java.io.InputStream
 
-/**
- * Author: 清纯的小黄瓜
- * Date: 2020/4/13 13:28
- * Email: 2894700792@qq.com
- */
-object ReadStreamUtil {
+object readStreamUtil {
     fun readStream(stream: InputStream, bufferLen: Int): ByteArray {
         val out = ByteArray(bufferLen)
         val readLen = stream.read(out)

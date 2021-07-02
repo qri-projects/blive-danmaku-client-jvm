@@ -1,6 +1,6 @@
 package com.ggemo.va.blivedanmakuclient.inner.util
 
-object StringUtils {
+object stringUtils {
     fun removeTransSlash(str: String): String {
         return str.replace("\\\\/".toRegex(), "/")
     }

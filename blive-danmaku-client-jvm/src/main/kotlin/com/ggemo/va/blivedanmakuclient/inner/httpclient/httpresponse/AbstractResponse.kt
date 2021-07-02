@@ -12,10 +12,10 @@ open class AbstractResponse<T> : Response {
     @Throws(BiliClientException::class)
     fun getD(): T {
         if (this.code != 0) {
-            throw BiliClientException("code != 0")
+            throw BiliClientException("http get data failed, code = $code, message: $message")
         }
         if (data == null) {
-            throw BiliClientException("data is null")
+            throw BiliClientException("http get data failed, data is null")
         }
         return data!!
     }
@@ -33,12 +33,6 @@ open class AbstractResponse<T> : Response {
                     ", message='" + message + '\'' +
                     ", data=null" +
                     '}'
-        }
-    }
-
-    companion object {
-        fun parse(json: String?): Response {
-            throw UnsupportedOperationException()
         }
     }
 }

@@ -2,7 +2,7 @@ package com.ggemo.va.blivedanmakuclient.handler.given
 
 import com.ggemo.va.blivedanmakuclient.handler.MsgHandler
 import com.ggemo.va.blivedanmakuclient.handler.given.msgdata.BLiveDanmakuMsgData
-import com.ggemo.va.blivedanmakuclient.inner.util.ByteArray2IntUtil
+import com.ggemo.va.blivedanmakuclient.inner.util.byteArray2IntUtil
 
 abstract class GivenMsgHandler: MsgHandler() {
     open suspend fun userCount(userCount: Int) {}
@@ -17,7 +17,7 @@ abstract class GivenMsgHandler: MsgHandler() {
 
     init {
         registerActionHandler(2) { _, data ->
-            val userCount = ByteArray2IntUtil.byteArray2Int32(data)
+            val userCount = byteArray2IntUtil.byteArray2Int32(data)
             this.userCount(userCount)
         }
 

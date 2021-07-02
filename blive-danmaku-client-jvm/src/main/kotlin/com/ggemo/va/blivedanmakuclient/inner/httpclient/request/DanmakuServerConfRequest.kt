@@ -17,7 +17,7 @@ class DanmakuServerConfRequest : Request {
         var responseEntity: HttpEntity? = null
         try {
             httpResponse.use {
-                responseEntity = httpResponse!!.entity
+                responseEntity = httpResponse.entity
                 return DanmakuServerConfResponse.Companion.parse(EntityUtils.toString(responseEntity))
             }
         } finally {

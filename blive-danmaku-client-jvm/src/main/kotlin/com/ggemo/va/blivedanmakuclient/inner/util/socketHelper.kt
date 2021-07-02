@@ -8,7 +8,7 @@ import java.io.IOException
 import java.net.Socket
 import java.nio.charset.StandardCharsets
 
-object SocketHelper {
+object socketHelper {
     private const val PROTOCOL_VERSION: Short = 1
     private const val HEAD_LEN: Short = 16
     private const val PARAM = 1

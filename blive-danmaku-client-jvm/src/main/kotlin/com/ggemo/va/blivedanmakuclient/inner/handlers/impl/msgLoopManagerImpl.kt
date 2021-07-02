@@ -2,7 +2,7 @@ package com.ggemo.va.blivedanmakuclient.inner.handlers.impl
 
 
 import com.ggemo.va.blivedanmakuclient.handler.MsgHandlerItfc
-import com.ggemo.va.blivedanmakuclient.inner.util.ReadStreamUtil
+import com.ggemo.va.blivedanmakuclient.inner.util.readStreamUtil
 import com.ggemo.va.blivedanmakuclientkt.BLiveDanmakuApplication
 import com.ggemo.va.blivedanmakuclientkt.handlers.MsgLoopManager
 import org.slf4j.LoggerFactory
@@ -28,7 +28,7 @@ object msgLoopManagerImpl : MsgLoopManager {
                 return
             }
             val input = DataInputStream(socketInputStream)
-            val data = ReadStreamUtil.readStream(input, bufferSize)
+            val data = readStreamUtil.readStream(input, bufferSize)
             msgHandler.handleRaw(data)
         }
     }
