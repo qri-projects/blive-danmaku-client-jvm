@@ -21,7 +21,6 @@ object socketIniterImpl : SocketIniter {
             socket.connect(address)
             return socket
         }
-        // todo: @sunqihong
-        throw RuntimeException()
+        throw RuntimeException("no danmaku server can reach")
     }
 }

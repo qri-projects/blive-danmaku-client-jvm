@@ -2,25 +2,22 @@ package com.ggemo.va.blivedanmakuclient.handler
 
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
-import com.ggemo.va.blivedanmakuclient.inner.handlers.impl.msgLoopManagerImpl
-import org.slf4j.LoggerFactory
 import java.io.ByteArrayInputStream
 import java.io.DataInputStream
 import java.nio.charset.StandardCharsets
 import java.util.zip.Inflater
 
 open class MsgHandler: MsgHandlerItfc {
-    private val log = LoggerFactory.getLogger(msgLoopManagerImpl::class.java)
 
     override suspend fun handleRaw(data: ByteArray) {
         val dataLength = data.size
         if (dataLength < 16) {
-            log.warn("wrong data")
+            println("wrong data")
         } else {
             val inputStream = DataInputStream(ByteArrayInputStream(data))
             val msgLength = inputStream.readInt()
             if (msgLength < 16) {
-                log.warn("maybe need expand size of cache")
+                println("maybe need expand size of cache")
             } else if (msgLength > 16 && msgLength == dataLength) {
                 val headerLength = inputStream.readShort()
                 val version = inputStream.readShort()

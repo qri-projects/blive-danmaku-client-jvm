@@ -6,7 +6,7 @@ plugins {
 }
 
 val projectGroup: String = "com.ggemo.va"
-val projectVersion: String = "2.0.1-SNAPSHOT"
+val projectVersion: String = "2.0.2-RELEASE"
 val projectName: String = "blive-danmaku-client"
 
 group = projectGroup

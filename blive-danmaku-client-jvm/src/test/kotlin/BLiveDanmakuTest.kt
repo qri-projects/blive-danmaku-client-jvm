@@ -9,7 +9,7 @@ import com.ggemo.va.blivedanmakuclientkt.Config
 fun main() {
         BLiveDanmakuApplication(
             Config(
-                6,
+                4767523,
                 object : GivenMsgHandler() {
                     override suspend fun userCount(userCount: Int) {
                         println("气人值: $userCount")
